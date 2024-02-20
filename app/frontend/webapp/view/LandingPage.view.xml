@@ -1,0 +1,9 @@
+<mvc:View controllerName="frontend.controller.LandingPage"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m">
+    <Page id="page">
+        <content>
+        <Text text="I am here"/>
+        </content>
+    </Page>
+</mvc:View>

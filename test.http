@@ -1,1 +1,12 @@
 GET http://localhost:4004/odata/v4/catalog/TablesList
+###
+
+POST http://localhost:4004/odata/v4/catalog/TablesList
+headers: {"X-Requested-With": "XMLHttpsRequest"}
+Content-Type: application/json
+{"table_id": "17",
+"description": "Demo Table 17",
+"entitySelected": "Labours"
+}
+
+# GET http://localhost:4004/odata/v4/catalog/api/tablesList
