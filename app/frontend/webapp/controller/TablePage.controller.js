@@ -18,19 +18,6 @@ sap.ui.define([
 
             },
 
-            // gettingData: async function () {
-            //     try {
-            //         // Use Axios to fetch data from an API
-            //         const response = await axios.get('https://services.odata.org/v4/northwind/northwind.svc/Employees');
-
-            //         // Handle successful response
-            //         console.log(response.data);
-            //     } catch (error) {
-            //         // Handle error
-            //         console.error(error);
-            //     }
-            // }
-
             gettingData: function () {
                 // var sUrl = this.getOwnerComponent().getModel("mainModel").getServiceUrl() + "Employees"
                 var sUrl = "https://services.odata.org/v4/northwind/northwind.svc/Employees"
@@ -51,125 +38,18 @@ sap.ui.define([
                 });
             },
 
-            // simply:function(){
-            //     let oModel = this.getView().getModel("tableDataModel");
-            //     let newEmployee = oModel.getProperty("/Datas");
-            //     console.log("newEmployee",newEmployee);
-            //     var data = [
-            //         { property1: "Value 1", property2: "Value 2", property3: "Value 3" },
-            //         { property1: "Value 4", property2: "Value 5", property3: "Value 6" },
-            //         // Add more data objects as needed
-            //     ];
-            //     data.map((prod)=>{
-            //         console.log(prod.property1)
-            //     })
-            // },
-
-            // settingTable:function(){
-
-            //      // Sample data array
-            // var data = [
-            //     { property1: "Value 1", property2: "Value 2", property3: "Value 3" },
-            //     { property1: "Value 4", property2: "Value 5", property3: "Value 6" },
-            //     // Add more data objects as needed
-            // ];
-            // data.map((prod)=>{
-            //     console.log(prod.property1)
-            // })
-
-            // // Create a JSON model and set data
-            // var oModel = new sap.ui.model.json.JSONModel();
-            // oModel.setData(data);
-
-            // // Set the model to the view
-            // this.getView().setModel(oModel, "yourModel");
-
-            // // Dynamically add columns to the table
-            // var oView = this.getView();
-            // var oTable = oView.byId("dynamicTable");
-
-            // data[0] && Object.keys(data[0]).forEach(function (sKey) {
-            //     var oColumn = new sap.m.Column({
-            //         header: new sap.m.Text({ text: sKey })
-            //     });
-            //     oTable.addColumn(oColumn);
-            // });
-
-            // // Dynamically add cells to the table
-            // var oFragmentCell;
-            // data[0] && Object.keys(data[0]).forEach(function (sKey) {
-            //     oFragmentCell = sap.ui.xmlfragment(oView.getId(), "yourFragmentCell", this);
-            //     oFragmentCell.bindProperty("text", sKey);
-            //     oTable.bindAggregation("items", "yourModel>/", function () {
-            //         return sap.ui.xmlfragment(oView.getId(), "yourFragmentCell", this);
-            //     });
-            // });
-
-            // }
-
-
-
-            // creatingTable: function () {
-            //     let oModel = this.getView().getModel("tableDataModel");
-            //     let newEmployee = oModel.getProperty("/Datas");
-            //     const length = Object.keys(newEmployee[0]).length;
-            //     let columnNames = Object.keys(newEmployee[0])
-
-
-
-            //     var oTable = this.getView().byId("idMyTable");
-
-            //     for (let i = 0; i < length; i++) {
-            //         var oColumn = new sap.m.Column("col" + i, {
-            //             width: "1em",
-            //             header: new sap.m.Label({
-            //                 text: columnNames[i]
-            //             })
-            //         });
-            //         oTable.addColumn(oColumn);
-            //     }
-
-            //     var oCell = [];
-            //     for (var i = 0; i < length; i++) {
-            //         // if (i === 0) {
-            //         //     var cell1 = new sap.m.Text({
-            //         //         text: "{QuestionTx}"
-            //         //     });
-            //         // }
-            //         var cell1 = new sap.m.Text({
-            //             text: "datasss"
-            //         });
-            //         oCell.push(cell1);
-            //     }
-            //     console.log('ocell',oCell)
-            //     var aColList = new sap.m.ColumnListItem("aColList", {
-            //         cells: oCell
-            //      });
-
-            //     //  oTable.bindItems("<entityset>", aColList);
-            //      oTable.bindItems("/Datas", aColList);
-
-
-
-            // },
-
-
 
         creatingTable: function () {
-            var oModel = this.getView().getModel("tableDataModel");
-            var newEmployee = oModel.getProperty("/Datas");
-            var length = Object.keys(newEmployee[0]).length;
+            var oModel1 = this.getView().getModel("tableDataModel");
+            var newEmployee = oModel1.getProperty("/Datas");
+            var totalRowCounts = Object.keys(newEmployee[0]).length;
+       
             var columnNames = Object.keys(newEmployee[0]);
 
             const columnData = Object.keys(newEmployee[0]).map(key => ({ columnName: key }));
-            console.log('columnData',columnData);
-            console.log("newEmployee",newEmployee);
-            console.log("columnNames",columnNames);
-            // const values = Object.values(newEmployee);
-            // console.log('values',values)
 
             var oTable = new sap.ui.table.Table({
-                visibleRowCount: 18
+                visibleRowCount: totalRowCounts
             });
 
             var oModel = new sap.ui.model.json.JSONModel();
@@ -188,14 +68,6 @@ sap.ui.define([
                     template: columnName,
                 });
             });
-            // oTable.bindColumns("/columns", function(sId, oContext) {
-            //     var columnName = oContext.getObject().columnName;
-            //     console.log('----columnName--',columnName)
-            //     // return new sap.ui.table.Column({
-            //     //     label: columnName,
-            //     //     template: columnName,
-            //     // });
-            // });
             oTable.bindRows("/rows");
             oTable.placeAt("content");
 
