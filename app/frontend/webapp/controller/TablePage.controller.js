@@ -158,40 +158,87 @@ sap.ui.define([
         creatingTable: function () {
             var oModel = this.getView().getModel("tableDataModel");
             var newEmployee = oModel.getProperty("/Datas");
-            console.log()
             var length = Object.keys(newEmployee[0]).length;
             var columnNames = Object.keys(newEmployee[0]);
-            const values = Object.values(newEmployee);
+
+            const columnData = Object.keys(newEmployee[0]).map(key => ({ columnName: key }));
+            console.log('columnData',columnData);
+            console.log("newEmployee",newEmployee);
+            console.log("columnNames",columnNames);
+            // const values = Object.values(newEmployee);
             // console.log('values',values)
 
+            var oTable = new sap.ui.table.Table({
+                visibleRowCount: 18
+            });
 
-            var oTable = this.getView().byId("idMyTable");
+            var oModel = new sap.ui.model.json.JSONModel();
 
-            for (var i = 0; i < length; i++) {
-                var oColumn = new Column({
-                    width: "1em",
-                    header: new sap.m.Label({
-                        text: columnNames[i]
-                    })
+            oModel.setData({
+                rows: newEmployee,
+                columns: columnData
+            });
+
+            oTable.setModel(oModel);
+
+            oTable.bindColumns("/columns", function(sId, oContext) {
+                var columnName = oContext.getObject().columnName;
+                return new sap.ui.table.Column({
+                    label: columnName,
+                    template: columnName,
                 });
-                oTable.addColumn(oColumn);
-            }
+            });
+            // oTable.bindColumns("/columns", function(sId, oContext) {
+            //     var columnName = oContext.getObject().columnName;
+            //     console.log('----columnName--',columnName)
+            //     // return new sap.ui.table.Column({
+            //     //     label: columnName,
+            //     //     template: columnName,
+            //     // });
+            // });
+            oTable.bindRows("/rows");
+            oTable.placeAt("content");
 
-            var oCell = [];
-            for (var i = 0; i < length; i++) {
-                var cell = new Text({
-                    // text: "{" + columnNames[i] + "}"
-                    text: "Datasss"
-                });
-                console.log("cellcccc",cell)
-                oCell.push(cell);
-            }
 
-            var aColList = new sap.m.ColumnListItem("aColList", {
-         cells: oCell
-      });
-            console.log('oColListItem',aColList)
-            oTable.bindItems("/tableDataModel/Datas", aColList);
+
+
+
+
+
+// -----------------------------------------------------1st trial strarts--------------------------------------
+
+    //         var oTable = this.getView().byId("idMyTable");
+
+    //         for (var i = 0; i < length; i++) {
+    //             var oColumn = new Column({
+    //                 width: "1em",
+    //                 header: new sap.m.Label({
+    //                     text: columnNames[i]
+    //                 })
+    //             });
+    //             oTable.addColumn(oColumn);
+    //         }
+
+    //         var oCell = [];
+    //         for (var i = 0; i < length; i++) {
+    //             var cell = new Text({
+    //                 // text: "{" + columnNames[i] + "}"
+    //                 text: "Datasss"
+    //             });
+    //             oCell.push(cell);
+    //         }
+
+    //         var aColList = new sap.m.ColumnListItem("aColList", {
+    //      cells: oCell
+    //   });
+    //         console.log('oColListItem',aColList)
+    //         oTable.bindItems("/tableDataModel/Datas", aColList);
+
+// -----------------------------------------------------1st trial ends--------------------------------------
+
+
+
+
         }
 
 

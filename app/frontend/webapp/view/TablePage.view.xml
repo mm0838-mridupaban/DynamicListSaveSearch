@@ -20,6 +20,9 @@
         text="Simply"
         press="creatingTable"
     />
+	<mvc:content>
+	
+	</mvc:content>
     <!-- <Table id="idProductsTable"
 		inset="false"
 		items="{
