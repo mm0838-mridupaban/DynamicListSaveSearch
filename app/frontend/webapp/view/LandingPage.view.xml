@@ -3,7 +3,79 @@
     xmlns="sap.m">
     <Page id="page">
         <content>
-        <Text text="I am here"/>
+        <Text text="I am here landing page"/>
+        <Table
+                items="{mainModel>/TablesList}"
+                id="table0"
+            >
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <content>
+                            <ToolbarSpacer />
+                            <SearchField
+                                id="searchField"
+                                width="20%"
+                                placeholder="search"
+                                search=".onSearch"
+                            />
+                            <Button
+                                id="createButton"
+                                icon="sap-icon://add"
+                                tooltip="Create"
+                                visible="true"
+                                press="onOpenAddDialog"
+                            >
+                                <layoutData>
+                                    <OverflowToolbarLayoutData
+                                        priority="NeverOverflow"
+                                    />
+                                </layoutData>
+                            </Button>
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column>
+                        <header>
+                            <Label text="Id" />
+                        </header>
+                    </Column>
+                    <Column>
+                        <header>
+                            <Label text="Description" />
+                        </header>
+                    </Column>
+                    <Column>
+                        <header>
+                            <Label text="Entity" />
+                        </header>
+                    </Column>          
+                </columns>
+                <items>
+                    <ColumnListItem
+                        type="Active"
+                        id="item0"
+                        press="onSelect"
+                    >
+                        <cells>
+                            <Text
+                                id="id1"
+                                text="{mainModel>table_id}"
+                            />
+                            <Text
+                                id="id2"
+                                text="{mainModel>description}"
+                            />
+                            <Text
+                                id="id5"
+                                text="{mainModel>entitySelected}"
+                            />
+                            <!-- <Button id="id6" icon="sap-icon://edit" press="onSelect" /> -->
+                        </cells>
+                    </ColumnListItem>
+                </items>
+                
+            </Table>
         </content>
     </Page>
 </mvc:View>

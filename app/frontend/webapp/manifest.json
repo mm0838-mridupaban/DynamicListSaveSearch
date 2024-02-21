@@ -68,7 +68,7 @@
           "bundleName": "frontend.i18n.i18n"
         }
       },
-      "mMainModel": {
+      "mainModel": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
@@ -77,6 +77,10 @@
           "autoExpandSelect": true,
           "earlyRequests": true
         }
+      },
+      "tableDataModel":{
+        "uri": "model/tableDataModel.json",
+        "type": "sap.ui.model.json.JSONModel"
       }
     },
     "resources": {
@@ -103,6 +107,13 @@
           "target": [
             "TargetLandingPage"
           ]
+        },
+        {
+          "name": "TablePage",
+          "pattern": "Table/{table_id}",
+          "target": [
+            "TargetTablePage"
+          ]
         }
       ],
       "targets": {
@@ -112,6 +123,13 @@
           "clearControlAggregation": false,
           "viewId": "LandingPage",
           "viewName": "LandingPage"
+        },
+        "TargetTablePage": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "TablePage",
+          "viewName": "TablePage"
         }
       }
     },

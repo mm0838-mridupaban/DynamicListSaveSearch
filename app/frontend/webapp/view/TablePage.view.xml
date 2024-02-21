@@ -1,0 +1,163 @@
+<!-- <mvc:View
+    controllerName="frontend.controller.TablePage"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+>
+    <Page id="page">
+        <content>
+            <Text text="I am here" />
+        </content>
+    </Page>
+</mvc:View> -->
+<mvc:View
+    controllerName="frontend.controller.TablePage"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+>
+    <Button
+        text="Simply"
+        press="creatingTable"
+    />
+    <!-- <Table id="idProductsTable"
+		inset="false"
+		items="{
+			path: 'tableDataModel>/Datas',
+			sorter: {
+				path: 'Name'
+			}
+		}">
+		<headerToolbar>
+			<OverflowToolbar>
+				<content>
+					<Title text="Products" level="H2"/>
+					<ToolbarSpacer />
+					<ComboBox id="idPopinLayout"
+					placeholder="Popin layout options"
+						change="onPopinLayoutChanged">
+						<items>
+							<core:Item  text="Block"
+								key="Block"/>
+							<core:Item  text="Grid Large"
+								key="GridLarge"/>
+							<core:Item  text="Grid Small"
+								key="GridSmall"/>
+						</items>
+					</ComboBox>
+					<Label text="Sticky options:" />
+					<CheckBox text="ColumnHeaders"
+						select="onSelect"/>
+					<CheckBox text="HeaderToolbar"
+						select="onSelect"/>
+					<CheckBox text="InfoToolbar"
+						select="onSelect"/>
+					<ToggleButton id="toggleInfoToolbar"
+						text="Hide/Show InfoToolbar"
+						press="onToggleInfoToolbar" />
+				</content>
+			</OverflowToolbar>
+		</headerToolbar>
+		<infoToolbar>
+			<OverflowToolbar>
+				<Label text="Wide range of available products"/>
+			</OverflowToolbar>
+		</infoToolbar>
+		<columns>
+			<Column
+				width="12em">
+				<Text text="Product" />
+			</Column>
+			<Column
+				minScreenWidth="Tablet"
+				demandPopin="true">
+				<Text text="Supplier" />
+			</Column>
+			<Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="End">
+				<Text text="Dimensions" />
+			</Column>
+			<Column
+				minScreenWidth="Desktop"
+				demandPopin="true"
+				hAlign="Center">
+				<Text text="Weight" />
+			</Column>
+			<Column
+				hAlign="End">
+				<Text text="Price" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem vAlign="Middle">
+				<cells>
+					<ObjectIdentifier
+						title="{Name}"
+						text="{tableDataModel>EmployeeID}"/>
+					<Text
+						text="{SupplierName}" />
+					<Text
+						text="{Width} x {Depth} x {Height} {DimUnit}" />
+					<Text
+						text="{SupplierName}" />
+					<Text
+						text="{Width} x {Depth} x {Height} {DimUnit}" />
+					<ObjectNumber
+						number="{WeightMeasure}"
+						unit="{WeightUnit}"
+						state="{
+							parts: [
+								{path: 'WeightMeasure'},
+								{path: 'WeightUnit'}
+							],
+							formatter: 'sap.m.sample.Table.Formatter.weightState'
+						}" />
+					<ObjectNumber
+							number="{
+								parts:[{path:'Price'},{path:'CurrencyCode'}],
+								type: 'sap.ui.model.type.Currency',
+								formatOptions: {showMeasure: false}
+							}"
+							unit="{CurrencyCode}" />
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table> -->
+
+    <!-- <Table
+        id="dynamicTable"
+        items="{/yourModel}"
+    >
+        <columns>
+            <Column
+                width="auto"
+                hAlign="Center"
+                vAlign="Middle"
+            >
+                <Text text="Column 1" />
+            </Column>
+            <core:Fragment
+                fragmentName="yourFragment"
+                type="XML"
+            />
+        </columns>
+        Bind each cell to the corresponding property in the model
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{property1}" />
+                    <core:Fragment fragmentName="yourFragmentCell" type="XML"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table> -->
+
+
+<Table id="idMyTable"  inset="false" growing="true" growingScrollToLoad="true" alternateRowColors="true">
+<!-- Our code in the controller goes here -->
+</Table>
+
+
+</mvc:View>
