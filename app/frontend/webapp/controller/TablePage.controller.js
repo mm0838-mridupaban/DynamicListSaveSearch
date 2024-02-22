@@ -43,6 +43,9 @@ sap.ui.define([
             var oModel1 = this.getView().getModel("tableDataModel");
             var newEmployee = oModel1.getProperty("/Datas");
             var totalRowCounts = Object.keys(newEmployee[0]).length;
+
+            var contentBox = this.byId("contentBox");
+            // var contentBox = this.byId("idMyTable");
        
             var columnNames = Object.keys(newEmployee[0]);
 
@@ -69,7 +72,16 @@ sap.ui.define([
                 });
             });
             oTable.bindRows("/rows");
-            oTable.placeAt("content");
+            // oTable.placeAt("content");
+             // Set table properties for responsiveness
+            // oTable.setGrowing(true);
+            // oTable.setGrowingScrollToLoad(true);
+
+            //  // Adjust column sizing for responsiveness
+            //  oTable.getColumns().forEach(function(column) {
+            //      column.setMinScreenWidth("Tablet");
+            //  });
+            contentBox.addItem(oTable);
 
 
 

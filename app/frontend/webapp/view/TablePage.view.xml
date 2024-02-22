@@ -10,7 +10,7 @@
         </content>
     </Page>
 </mvc:View> -->
-<mvc:View
+<!-- <mvc:View
     controllerName="frontend.controller.TablePage"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
@@ -24,7 +24,7 @@
         <content>
             <Text text="I am here" />
         </content>
-    </Page>
+    </Page> -->
 
 
 <!-- <Table id="idMyTable"  inset="false" growing="true" growingScrollToLoad="true" alternateRowColors="true">
@@ -32,4 +32,31 @@
 </Table> -->
 
 
+<!-- </mvc:View> -->
+
+
+<mvc:View
+    controllerName="frontend.controller.TablePage"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+>
+    <Button
+        text="Create Table"
+        press="creatingTable"
+    />
+    <Page id="page">
+        <content>
+            <VBox id="contentBox">
+                <!-- Your other content here -->
+                <Text text="I am here" />
+            </VBox>
+
+<Table id="idMyTable"  inset="false" growing="true" growingScrollToLoad="true" alternateRowColors="true">
+
+</Table>
+
+
+        </content>
+    </Page>
 </mvc:View>
