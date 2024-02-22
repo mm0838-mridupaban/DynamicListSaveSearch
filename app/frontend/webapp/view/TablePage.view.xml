@@ -25,38 +25,40 @@
             <Text text="I am here" />
         </content>
     </Page> -->
-
-
 <!-- <Table id="idMyTable"  inset="false" growing="true" growingScrollToLoad="true" alternateRowColors="true">
 
 </Table> -->
-
-
 <!-- </mvc:View> -->
-
-
 <mvc:View
     controllerName="frontend.controller.TablePage"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
 >
-    <Button
+    <Page id="page">
+        <content>
+             <Button
         text="Create Table"
         press="creatingTable"
     />
-    <Page id="page">
-        <content>
-            <VBox id="contentBox">
-                <!-- Your other content here -->
-                <Text text="I am here" />
-            </VBox>
-
-<Table id="idMyTable"  inset="false" growing="true" growingScrollToLoad="true" alternateRowColors="true">
-
-</Table>
-
-
+           
+                <ScrollContainer
+                    vertical="true"
+                    horizontal="true"
+                >
+                    <!-- <Image src="{img>/products/pic1}" width="{/width}" /> -->
+                    <!-- <Table
+                        id="idMyTable"
+                        alternateRowColors="true"
+                        autoPopinMode="true"
+                    /> -->
+                    <Table
+                        id="idMyTable"
+                        alternateRowColors="true"
+                       
+                    />
+                </ScrollContainer>
+           
         </content>
     </Page>
 </mvc:View>

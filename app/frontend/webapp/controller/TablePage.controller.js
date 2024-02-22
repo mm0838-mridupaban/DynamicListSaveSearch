@@ -42,34 +42,37 @@ sap.ui.define(
       creatingTable: function () {
         var oModel1 = this.getView().getModel("tableDataModel");
         var newEmployee = oModel1.getProperty("/Datas");
-        console.log("newEmployee", newEmployee);
+        // console.log("newEmployee", newEmployee);
 
         var columnNames = Object.keys(newEmployee[0]);
 
 
-        // Create a new instance of sap.m.Table
-        var oTable = new sap.m.Table({
-          growing: true,
-          growingScrollToLoad: true,
-          inset:false
-        });
+        // // Create a new instance of sap.m.Table
+        // var oTable = new sap.m.Table({
+        //   growing: true,
+        //   growingScrollToLoad: true,
+        //   inset:false
+        // });
+
+        var oTable = this.getView().byId("idMyTable")
 
         // Create columns dynamically
         Object.keys(newEmployee[0]).forEach(function (columnName) {
           // console.log('columnName',columnName) here column name is working fine representing column
           oTable.addColumn(
             new sap.m.Column({
+              width:"10rem",
               header: new sap.m.Label({ text: columnName }),
-              width: "auto", // Set width to auto for responsive behavior
+              // width: "auto", // Set width to auto for responsive behavior
             })
           );
         });
 
         // Bind items to the table
-        var oItemTemplate = new sap.m.ColumnListItem();
-        Object.keys(newEmployee[0]).forEach(function(columnName) {
-            oItemTemplate.addCell(new sap.m.Text({ text: "{" + columnName + "}" }));
-        });
+        // var oItemTemplate = new sap.m.ColumnListItem();
+        // Object.keys(newEmployee[0]).forEach(function(columnName) {
+        //     oItemTemplate.addCell(new sap.m.Text({ text: "{" + columnName + "}" }));
+        // });
         // console.log('oItemTemplate',oItemTemplate)
 
         // // Add cells for each column
@@ -101,8 +104,10 @@ sap.ui.define(
           path: "tableDataModel>/Datas",
           template: new sap.m.ColumnListItem({
             cells: columnNames.map(function(columnName) {
-              return new sap.m.Text({
-                text: "{tableDataModel>" + columnName + "}"
+              return new sap.m.ExpandableText({
+                text: "{tableDataModel>" + columnName + "}",
+                overflowMode:sap.m.ExpandableTextOverflowMode.Popover
+
               });
             })
           })
