@@ -1,64 +1,31 @@
-<!-- <mvc:View
-    controllerName="frontend.controller.TablePage"
-    xmlns:mvc="sap.ui.core.mvc"
-    displayBlock="true"
-    xmlns="sap.m"
->
-    <Page id="page">
-        <content>
-            <Text text="I am here" />
-        </content>
-    </Page>
-</mvc:View> -->
-<!-- <mvc:View
-    controllerName="frontend.controller.TablePage"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns:core="sap.ui.core"
-    xmlns="sap.m"
->
-    <Button
-        text="Simply"
-        press="creatingTable"
-    />
-        <Page id="page">
-        <content>
-            <Text text="I am here" />
-        </content>
-    </Page> -->
-<!-- <Table id="idMyTable"  inset="false" growing="true" growingScrollToLoad="true" alternateRowColors="true">
-
-</Table> -->
-<!-- </mvc:View> -->
 <mvc:View
     controllerName="frontend.controller.TablePage"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
 >
-    <Page id="page">
+    <Page
+        id="page"
+        showNavButton="true"
+        navButtonPress="onNavButtonPress"
+    >
         <content>
-             <Button
-        text="Create Table"
-        press="creatingTable"
-    />
-           
-                <ScrollContainer
-                    vertical="true"
-                    horizontal="true"
-                >
-                    <!-- <Image src="{img>/products/pic1}" width="{/width}" /> -->
-                    <!-- <Table
-                        id="idMyTable"
-                        alternateRowColors="true"
-                        autoPopinMode="true"
-                    /> -->
-                    <Table
-                        id="idMyTable"
-                        alternateRowColors="true"
-                       
-                    />
-                </ScrollContainer>
-           
+            <ScrollContainer
+                vertical="true"
+                horizontal="true"
+            >
+                <Button
+                    text="Open View Settings Dialog"
+                    press="handleOpenDialog"
+                />
+                <Table
+                    id="idMyTable"
+                    alternateRowColors="true"
+                    inset="false"
+                    growing="true"
+                    growingScrollToLoad="true"
+                />
+            </ScrollContainer>
         </content>
     </Page>
 </mvc:View>
