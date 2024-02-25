@@ -14,10 +14,6 @@
                 vertical="true"
                 horizontal="true"
             >
-                <Button
-                    text="Open View Settings Dialog"
-                    press="handleOpenDialog"
-                />
                 <Table
                     id="idMyTable"
                     alternateRowColors="true"
@@ -36,7 +32,8 @@
 			<OverflowToolbarButton text="Sort" type="Transparent" icon="sap-icon://sort" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="handleOpenDialogSort" />
 			<OverflowToolbarButton text="Filter" type="Transparent" icon="sap-icon://filter" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="handleOpenDialogFilter" />
 			<OverflowToolbarButton text="Group" type="Transparent" icon="sap-icon://group-2" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="handleOpenDialogGroup" />
-			<OverflowToolbarButton text="Group" type="Transparent" icon="sap-icon://action-settings" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="handleOpenDialogGroup" />
+			<OverflowToolbarButton text="Columnns" type="Transparent" icon="sap-icon://action-settings" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="handleOpenDialogGroup" />
+            <Button text="Save" press="onSavePress"/>
 		</OverflowToolbar>
 	</headerToolbar>
                 </Table>

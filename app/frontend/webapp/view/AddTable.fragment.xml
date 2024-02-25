@@ -1,0 +1,62 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Dialog
+        id="OpenDialog"
+        title="New Employee Registration"
+    >
+        <buttons>
+            <!-- Buttons definition -->
+        </buttons>
+        <content>
+            <f:SimpleForm
+                id="simpleFormChange"
+                editable="true"
+                class="editableForm"
+            >
+                <f:content>
+                    <Label text="ID" />
+                    <Input value="{tableDataModel>/NewTable/table_id}" />
+                    <Label text="Description" />
+                    <Input value="{tableDataModel>/NewTable/description}" />
+                    <Label text="Entity" />
+                    <Input value="{tableDataModel>/NewTable/entitySelected}" />
+
+
+                    <!-- <Label text="Department" /> -->
+                    <!-- <Input
+                                            value="{EmployeeData>/NewEmployee/Department}"
+                                        /> -->
+                    <!-- departmenttttttttttttttttttttttttttttttttttttttttttt -->
+
+                    <!-- <Input
+                        id="productInput"
+                        placeholder="Enter Department"
+                        showSuggestion="true"
+                        showValueHelp="true"
+                        valueHelpRequest=".onValueHelpRequest"
+                        suggestionItems="{mainModel>/Departments}"
+                        value="{EmployeeData>/NewEmployee/Department}"
+                    >
+                        <suggestionItems>
+                            <core:Item text="{mainModel>Name}" />
+                        </suggestionItems>
+                    </Input> -->
+
+                    <!-- departmenttttttttttttttttttttttttttttttttttttttttttt -->
+
+                    <Button
+                        text="Create"
+                        press="onCreate"
+                    />
+                    <Button
+                        text="Cancel"
+                        press=".onCancelDialog"
+                    />
+                </f:content>
+            </f:SimpleForm>
+        </content>
+    </Dialog>
+</core:FragmentDefinition>

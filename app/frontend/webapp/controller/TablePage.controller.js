@@ -7,8 +7,8 @@ sap.ui.define(
     "sap/ui/core/CustomData",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-   "sap/ui/model/Sorter",
-   "sap/m/ViewSettingsFilterItem"
+    "sap/ui/model/Sorter",
+    "sap/m/ViewSettingsFilterItem",
   ],
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -195,170 +195,189 @@ sap.ui.define(
         this._openDialog("MainFilter", "group", this._presetSettingsItems);
       },
 
-      _openDialog: function(sName, sPage, fInit) {
+      _openDialog: function (sName, sPage, fInit) {
         let oView = this.getView(),
-            oThis = this;
-    
+          oThis = this;
+
         // creates requested dialog if not yet created
         if (!this._mDialogs[sName]) {
-            this._mDialogs[sName] = Fragment.load({
-                id: oView.getId(),
-                name: "frontend.view." + sName,
-                controller: this
-            }).then(function(oDialog) {
-                oView.addDependent(oDialog);
-                if (fInit) {
-                    fInit(oDialog, oThis);
-                }
-                return oDialog;
-            });
+          this._mDialogs[sName] = Fragment.load({
+            id: oView.getId(),
+            name: "frontend.view." + sName,
+            controller: this,
+          }).then(function (oDialog) {
+            oView.addDependent(oDialog);
+            if (fInit) {
+              fInit(oDialog, oThis);
+            }
+            return oDialog;
+          });
         }
-        this._mDialogs[sName].then(function(oDialog) {
-            oDialog.open(sPage); // opens the requested dialog page
+        this._mDialogs[sName].then(function (oDialog) {
+          oDialog.open(sPage); // opens the requested dialog page
         });
-    },
+      },
 
+      _presetSettingsItems: function (oDialog, oThis) {
+        oThis._presetFiltersInit(oDialog, oThis);
+        oThis._presetSortsInit(oDialog, oThis);
+        oThis._presetGroupsInit(oDialog, oThis);
+      },
 
-    _presetSettingsItems: function(oDialog, oThis) {
-      oThis._presetFiltersInit(oDialog, oThis);
-      oThis._presetSortsInit(oDialog, oThis);
-      oThis._presetGroupsInit(oDialog, oThis);
-  },
+      // -----sorting-----
 
-// -----sorting-----
-
-  _presetSortsInit: function(oDialog, oThis) {
-    let oDialogParent = oDialog.getParent(),
-        oTable = oDialogParent.byId("idMyTable"),
-        oColumns = oTable.getColumns();
+      _presetSortsInit: function (oDialog, oThis) {
+        let oDialogParent = oDialog.getParent(),
+          oTable = oDialogParent.byId("idMyTable"),
+          oColumns = oTable.getColumns();
         // console.log('oColumns',oColumns)
-    // Loop every column of the table
-    oColumns.forEach(column => {
-        // let columnId = column.getId().split("--")[2]; // Get column ID (JSON Property)
-        let columnId = column.getAggregation("header").getProperty("text"); // Get column ID (JSON Property)
-        // console.log('columnIdzzzz',columnId)
-        oDialog.addSortItem(new ViewSettingsItem({ // Convert column ID into ViewSettingsItem objects.
-            key: columnId, // Key -> JSON Property
-            text: column.getAggregation("header").getProperty("text"),
-        }));
-    })
-},
-// ------filtering
+        // Loop every column of the table
+        oColumns.forEach((column) => {
+          // let columnId = column.getId().split("--")[2]; // Get column ID (JSON Property)
+          let columnId = column.getAggregation("header").getProperty("text"); // Get column ID (JSON Property)
+          // console.log('columnIdzzzz',columnId)
+          oDialog.addSortItem(
+            new ViewSettingsItem({
+              // Convert column ID into ViewSettingsItem objects.
+              key: columnId, // Key -> JSON Property
+              text: column.getAggregation("header").getProperty("text"),
+            })
+          );
+        });
+      },
+      // ------filtering
 
-_presetFiltersInit: function(oDialog, oThis) {
-  let oDialogParent = oDialog.getParent(),
-      oModelData = oDialogParent.getController().getOwnerComponent().getModel("tableDataModel").getData(),
-      oTable = oDialogParent.byId("idMyTable"),
-      oColumns = oTable.getColumns();
-      console.log('oColumns',oColumns);
-      // console.log('oTable',oTable);
-      console.log('oModelData',oModelData.Datas);
+      _presetFiltersInit: function (oDialog, oThis) {
+        let oDialogParent = oDialog.getParent(),
+          oModelData = oDialogParent
+            .getController()
+            .getOwnerComponent()
+            .getModel("tableDataModel")
+            .getData(),
+          oTable = oDialogParent.byId("idMyTable"),
+          oColumns = oTable.getColumns();
+        console.log("oColumns", oColumns);
+        // console.log('oTable',oTable);
+        console.log("oModelData", oModelData.Datas);
 
-  // Loop every column of the table
-  oColumns.forEach(column => {
-      // let columnId = column.getId().split("--")[2], // Get column ID (JSON Property)
-      // let columnId = column.getId().substring(2), // Get column ID (JSON Property)
-      let columnId = column.getAggregation('header').getProperty('text'), // Get column ID (JSON Property)
-          oColumnItems = oModelData.Datas.map(oItem => oItem[columnId]), // Use column ID as JSON property (Here's the magic !)
-          // oColumnItems = oModelData.Datas.map(oItem =>console.log('oItem',oItem)), // Use column ID as JSON property (Here's the magic !)
-          oUniqueItems = oColumnItems.filter((value, index, array) => array.indexOf(value) === index), // Get all unique values for this column
-          oUniqueFilterItems = oUniqueItems.map(oItem => new ViewSettingsItem({ // Convert unique values into ViewSettingsItem objects.
-              text: oItem,
-              key: columnId + "___" + "EQ___" + oItem // JSON property = Unique value
-          }));
-          console.log('columnId',columnId)
-          console.log('oUniqueItems',oUniqueItems)
+        // Loop every column of the table
+        oColumns.forEach((column) => {
+          // let columnId = column.getId().split("--")[2], // Get column ID (JSON Property)
+          // let columnId = column.getId().substring(2), // Get column ID (JSON Property)
+          let columnId = column.getAggregation("header").getProperty("text"), // Get column ID (JSON Property)
+            oColumnItems = oModelData.Datas.map((oItem) => oItem[columnId]), // Use column ID as JSON property (Here's the magic !)
+            // oColumnItems = oModelData.Datas.map(oItem =>console.log('oItem',oItem)), // Use column ID as JSON property (Here's the magic !)
+            oUniqueItems = oColumnItems.filter(
+              (value, index, array) => array.indexOf(value) === index
+            ), // Get all unique values for this column
+            oUniqueFilterItems = oUniqueItems.map(
+              (oItem) =>
+                new ViewSettingsItem({
+                  // Convert unique values into ViewSettingsItem objects.
+                  text: oItem,
+                  key: columnId + "___" + "EQ___" + oItem, // JSON property = Unique value
+                })
+            );
+          console.log("columnId", columnId);
+          console.log("oUniqueItems", oUniqueItems);
 
-      // Set this values as selectable on the filter list
-      oDialog.addFilterItem(new ViewSettingsFilterItem({
-          key: columnId, // ID of the column && JSON property
-          text: column.getAggregation("header").getProperty("text"), // Filter Name -> Column Text
-          items: oUniqueFilterItems // Set of possible values of the filter
-      }));
-  })
-},
-// ------grouping-----
-_presetGroupsInit: function(oDialog, oThis) {
-  let oDialogParent = oDialog.getParent(),
-      oTable = oDialogParent.byId("idMyTable"),
-      oColumns = oTable.getColumns();
+          // Set this values as selectable on the filter list
+          oDialog.addFilterItem(
+            new ViewSettingsFilterItem({
+              key: columnId, // ID of the column && JSON property
+              text: column.getAggregation("header").getProperty("text"), // Filter Name -> Column Text
+              items: oUniqueFilterItems, // Set of possible values of the filter
+            })
+          );
+        });
+      },
+      // ------grouping-----
+      _presetGroupsInit: function (oDialog, oThis) {
+        let oDialogParent = oDialog.getParent(),
+          oTable = oDialogParent.byId("idMyTable"),
+          oColumns = oTable.getColumns();
 
-  this.mGroupFunctions = {};
-  // Loop every column of the table
-  oColumns.forEach(column => {
-      // let columnId = column.getId().split("--")[2]; // Get column ID (JSON Property)
-      let columnId = column.getAggregation("header").getProperty("text"); // Get column ID (JSON Property)
-      oDialog.addGroupItem(new ViewSettingsItem({ // Convert column ID into ViewSettingsItem objects.
-          key: columnId, // ID of the column && JSON property
-          text: column.getAggregation("header").getProperty("text") // Filter Name -> Column Text
-      }));
-      // Set group functions
-      let groupFn = function(oContext) {
-          var name = oContext.getProperty(columnId);
-          return {
+        this.mGroupFunctions = {};
+        // Loop every column of the table
+        oColumns.forEach((column) => {
+          // let columnId = column.getId().split("--")[2]; // Get column ID (JSON Property)
+          let columnId = column.getAggregation("header").getProperty("text"); // Get column ID (JSON Property)
+          oDialog.addGroupItem(
+            new ViewSettingsItem({
+              // Convert column ID into ViewSettingsItem objects.
+              key: columnId, // ID of the column && JSON property
+              text: column.getAggregation("header").getProperty("text"), // Filter Name -> Column Text
+            })
+          );
+          // Set group functions
+          let groupFn = function (oContext) {
+            var name = oContext.getProperty(columnId);
+            return {
               key: name, // ID of the column && JSON property
-              text: name // Filter Name -> Column Text
+              text: name, // Filter Name -> Column Text
+            };
           };
-      }
-      this.mGroupFunctions[columnId] = {};
-      this.mGroupFunctions[columnId] = groupFn;
-  });
-},
+          this.mGroupFunctions[columnId] = {};
+          this.mGroupFunctions[columnId] = groupFn;
+        });
+      },
 
-
-handleConfirm: function(oEvent) {
-  let oTable = this.byId("idMyTable"),
-      mParams = oEvent.getParameters(),
-      oBinding = oTable.getBinding("items"),
-      aFilters = [],
-      sPath,
-      bDescending,
-      aSorters = [],
-      vGroup,
-      aGroups = [];
-
-  // Filtering
-  if (mParams.filterItems) {
-      mParams.filterItems.forEach(function(oItem) {
-          let aSplit = oItem.getKey().split("___"),
+      handleConfirm: function (oEvent) {
+        let oTable = this.byId("idMyTable"),
+          mParams = oEvent.getParameters(),
+          oBinding = oTable.getBinding("items"),
+          aFilters = [],
+          sPath,
+          bDescending,
+          aSorters = [],
+          vGroup,
+          aGroups = [];
+        console.log("mParams", mParams);
+        // Filtering
+        if (mParams.filterItems) {
+          mParams.filterItems.forEach(function (oItem) {
+            let aSplit = oItem.getKey().split("___"),
               sPath = aSplit[0],
               sOperator = aSplit[1],
               sValue1 = aSplit[2],
               sValue2 = aSplit[3],
               oFilter = new Filter(sPath, sOperator, sValue1, sValue2);
-          aFilters.push(oFilter);
-      });
-      // apply filter settings
-      oBinding.filter(aFilters);
-      // update filter bar
-      this.byId("suppliersFilterBar").setVisible(aFilters.length > 0);
-      this.byId("suppliersFilterLabel").setText(mParams.filterString);
-  }
-  // Sorting
-  if (mParams.sortItem) {
-      sPath = mParams.sortItem.getKey();
-      bDescending = mParams.sortDescending;
-      aSorters.push(new Sorter(sPath, bDescending));
-      // apply the selected sort and group settings
-      oBinding.sort(aSorters);
-  }
-  // Grouping
-  if (mParams.groupItem) {
-      sPath = mParams.groupItem.getKey();
-      bDescending = mParams.groupDescending;
-      vGroup = this.mGroupFunctions[sPath];
-      aGroups.push(new Sorter(sPath, bDescending, vGroup));
-      // apply the selected group settings
-      oBinding.sort(aGroups);
-  } else if (this.groupReset) {
-      oBinding.sort();
-      this.groupReset = false;
-  }
-}
+            aFilters.push(oFilter);
+          });
+          // apply filter settings
+          oBinding.filter(aFilters);
+          // update filter bar
+          this.byId("suppliersFilterBar").setVisible(aFilters.length > 0);
+          this.byId("suppliersFilterLabel").setText(mParams.filterString);
+        }
+        // Sorting
+        if (mParams.sortItem) {
+          sPath = mParams.sortItem.getKey();
+          console.log("sPath", sPath);
+          bDescending = mParams.sortDescending;
+          aSorters.push(new Sorter(sPath, bDescending));
+          // apply the selected sort and group settings
+          oBinding.sort(aSorters);
+        }
+        // Grouping
+        if (mParams.groupItem) {
+          sPath = mParams.groupItem.getKey();
+          bDescending = mParams.groupDescending;
+          vGroup = this.mGroupFunctions[sPath];
+          aGroups.push(new Sorter(sPath, bDescending, vGroup));
+          // apply the selected group settings
+          oBinding.sort(aGroups);
+        } else if (this.groupReset) {
+          oBinding.sort();
+          this.groupReset = false;
+        }
+      },
 
+      // --------------------------------------------------------On Save button press--------------------->>>>>>>>>>>
 
-
+      onSavePress: function () {
+        
+      },
     });
   }
 );
-

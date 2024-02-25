@@ -23,7 +23,7 @@
                                 icon="sap-icon://add"
                                 tooltip="Create"
                                 visible="true"
-                                press="onOpenAddDialog"
+                                press="onOpenDialog"
                             >
                                 <layoutData>
                                     <OverflowToolbarLayoutData
