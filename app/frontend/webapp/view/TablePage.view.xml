@@ -35,6 +35,7 @@
 			<OverflowToolbarButton text="Columnns" type="Transparent" icon="sap-icon://action-settings" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="handleOpenDialogGroup" />
             <Button text="Save" press="onSavePress"/>
             <Button text="Experiment" press="filteringDatas"/>
+            <Button text="Create Table" press="creatingTable"/>
 		</OverflowToolbar>
 	</headerToolbar>
                 </Table>

@@ -47,40 +47,53 @@ sap.ui.define(
         let table_id = window.decodeURIComponent(
           oEvent.getParameter("arguments").table_id
         );
-        this.gettingSingleData(table_id);
-        this.gettingColumnNames(table_id);
+        // this.gettingSingleData(table_id);
+        this.onEveryLoad(table_id);
+        // this.gettingColumnSettings(table_id);
+      },
+      onEveryLoad: async function (table_id) {
+        let entitySelected = await this.gettingTableRowData(table_id);
+        let NorthWindDatas =await this.gettingNorthwindData(entitySelected);
+        let ColumnSettingsDatas=await this.gettingColumnSettings(table_id);
+        console.log('letssss',NorthWindDatas)
+        console.log('letssssColl',ColumnSettingsDatas)
+        await this.filteringDatas(NorthWindDatas,ColumnSettingsDatas);
+        this.creatingTable();
       },
 
       // ---------------Getting the specific row data from Table List by table_id from Hana DB---------->
 
-      gettingSingleData: function (table_id) {
+      gettingTableRowData: function (table_id) {
         sap.ui.core.BusyIndicator.show();
 
-        let sUrl =
-          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
-          `TablesList/${table_id}`;
-        var that = this;
-        //Make a Call using AJAX
+        return new Promise((resolve, reject) => {
+          let sUrl =
+            this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+            `TablesList/${table_id}`;
+          var that = this;
+          //Make a Call using AJAX
 
-        $.ajax({
-          type: "GET",
-          url: sUrl,
-          success: function (data) {
-            let entitySelected = data.entitySelected;
-            that.gettingData(entitySelected);
-          },
-          error: function () {
-            console.error(error);
-          },
+          $.ajax({
+            type: "GET",
+            url: sUrl,
+            success: function (data) {
+              let entitySelected = data.entitySelected;
+              resolve(entitySelected);
+              // that.gettingNorthwindData(entitySelected);
+            },
+            error: function () {
+              console.error(error);
+            },
+          });
         });
       },
       // ----------------Getting the column Names from ColumnSettings as per tableID----->>>
 
-      gettingColumnNames: function (table_id) {
-          let sUrl =
+      gettingColumnSettings: function (table_id) {
+        return new Promise((resolve, reject) => {
+        let sUrl =
           this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
           `ColumnSettings?$filter=table_id eq '${table_id}'`; // Filter data based on table_id
-
 
         var that = this;
         //Make a Call using AJAX
@@ -89,77 +102,81 @@ sap.ui.define(
           type: "GET",
           url: sUrl,
           success: function (data) {
-            if(data.value.length < 1){
-             return console.log("No data exist for the provided tableID")
+            if (data.value.length < 1) {
+              return console.log("No data exist for the provided tableID");
             }
-            // console.log("dataColumnss",data.value)
+            console.log("dataColumnss", data.value);
             let oModel = that.getView().getModel("tableDataModel");
             oModel.setProperty("/ColumnSettingsDatas", data.value);
+            resolve(data.value)
             // console.log('NorthWindData',data.value)
           },
           error: function () {
             console.error(error);
           },
         });
+        });
       },
-// -------------------Filtering datas as per column_name visible status---->>>
-
-filteringDatas:function(){
-  let NorthWindDatas=this.getView().getModel("tableDataModel").getProperty("/Datas");
-  let ColumnSettingsDatas=this.getView().getModel("tableDataModel").getProperty("/ColumnSettingsDatas");
-
-  console.log('NorthWindDatas',NorthWindDatas);
-  console.log('ColumnSettingsDatas',ColumnSettingsDatas);
-  
-//   // Filter ColumnSettingsData to get only visible columns
-// let visibleColumns = ColumnSettingsDatas.filter(column => column.is_visible);
-// console.log('visibleColumns',visibleColumns)
-
-// // Form a new array with data from Datas based on visible columns
-// let newDataArray = visibleColumns.map(column => {
-//     let columnName = column.column_name;
-//     return NorthWindDatas.map(data => data[columnName]);
-// });
-
-// console.log('newDataArray',newDataArray)
-let visibleColumns = ColumnSettingsDatas.filter(column => column.is_visible);
-
-// Form a new array with data from Datas based on visible columns
-let newformedArray = NorthWindDatas.map(data => {
-    let newObj = {};
-    visibleColumns.forEach(column => {
-        newObj[column.column_name] = data[column.column_name];
-    });
-    return newObj;
-});
-this.getView().getModel("tableDataModel").setProperty("/SelectedColumnDatas");
-console.log(newformedArray);
-
-},
-
-
 
       // ---------------Getting the data from Northwind as per entity selected---------->
 
-      gettingData: function (entityName) {
+      gettingNorthwindData: function (entityName) {
+        return new Promise((resolve, reject) => {
+
         let sUrl = `https://services.odata.org/v4/northwind/northwind.svc/${entityName}`;
         var that = this;
         //Make a Call using AJAX
-        // console.log("inside gettingData",that.getView().getModel("tableDataModel").getProperty("/Datas"))
+        // console.log("inside gettingNorthwindData",that.getView().getModel("tableDataModel").getProperty("/Datas"))
 
         $.ajax({
           type: "GET",
           url: sUrl,
           success: function (data) {
             let oModel = that.getView().getModel("tableDataModel");
-            console.log('NorthWindData',data.value)
+            // console.log("NorthWindData", data.value);
             oModel.setProperty("/Datas", data.value);
-            that.creatingTable();
+            resolve(data.value)
+            // that.creatingTable();
           },
           error: function () {
             console.error(error);
           },
         });
+        });
+      },
+
+      // -------------------Filtering datas as per column_name visible status---->>>
+
+      filteringDatas: function (NorthWindDatas,ColumnSettingsDatas) {
+        console.log("looll", this.getView().getModel("tableDataModel"));
+        // let NorthWindDatas = this.getView()
+        //   .getModel("tableDataModel")
+        //   .getProperty("/Datas");
+        // let ColumnSettingsDatas = this.getView()
+        //   .getModel("tableDataModel")
+        //   .getProperty("/ColumnSettingsDatas");
+
+        // console.log("NorthWindDatas", NorthWindDatas);
+        // console.log("ColumnSettingsDatas", ColumnSettingsDatas);
+
+        // console.log('newDataArray',newDataArray)
+        let visibleColumns = ColumnSettingsDatas.filter(
+          (column) => column.is_visible
+        );
+
+        // Form a new array with data from Datas based on visible columns
+        let newformedArray = NorthWindDatas.map((data) => {
+          let newObj = {};
+          visibleColumns.forEach((column) => {
+            newObj[column.column_name] = data[column.column_name];
+          });
+          return newObj;
+        });
+        this.getView()
+          .getModel("tableDataModel")
+          .setProperty("/SelectedColumnDatas", newformedArray);
+
+        console.log(newformedArray);
       },
 
       // ----------------------------------Creating Columns and Rows with dynamic data for the Table----------------->>>
@@ -172,10 +189,11 @@ console.log(newformedArray);
         // debugger;
 
         let oModel1 = this.getView().getModel("tableDataModel");
-        let datas = oModel1.getProperty("/Datas");
+        let datas = oModel1.getProperty("/SelectedColumnDatas");
+        console.log("datas345", datas);
         // console.log("datas", datas);
         var columnNames = Object.keys(datas[0]);
-        // console.log('columnNames',columnNames)
+        console.log("columnNames", columnNames);
 
         // Create columns dynamically
         columnNames.forEach(function (columnName) {
@@ -189,7 +207,7 @@ console.log(newformedArray);
         });
 
         oTable.bindItems({
-          path: "tableDataModel>/Datas",
+          path: "tableDataModel>/SelectedColumnDatas",
           template: new sap.m.ColumnListItem({
             cells: columnNames.map(function (columnName) {
               return new sap.m.ExpandableText({
@@ -280,7 +298,7 @@ console.log(newformedArray);
       },
 
       _presetSettingsItems: function (oDialog, oThis) {
-        console.log('oThis',oThis);
+        console.log("oThis", oThis);
         oThis._presetFiltersInit(oDialog, oThis);
         oThis._presetSortsInit(oDialog, oThis);
         oThis._presetGroupsInit(oDialog, oThis);
@@ -437,9 +455,7 @@ console.log(newformedArray);
 
       // --------------------------------------------------------On Save button press--------------------->>>>>>>>>>>
 
-      onSavePress: function () {
-        
-      },
+      onSavePress: function () {},
     });
   }
 );
