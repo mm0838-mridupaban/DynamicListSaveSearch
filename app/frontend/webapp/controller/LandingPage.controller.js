@@ -52,11 +52,13 @@ sap.ui.define(
           .getServiceUrl();
 
         console.log("entity", entity, "table_id", table_id);
+        console.log("localUrl", localUrl, "newTable", newTable);
 
-        await this.creatingTableList(newTable);
+        await this.creatingTableList(localUrl,newTable);
         let columnNames = await this.gettingNorthWindData(entity);
-        let lastIdNumber = await this.getLastColumnId();
         console.log("columnNamesuuu", columnNames);
+        let lastIdNumber = await this.getLastColumnId(localUrl);
+        console.log('lastIdNumber',lastIdNumber)
         // let columnId=await this.getColumnId();
         this.createColumnSettings(
           localUrl,
@@ -74,6 +76,7 @@ sap.ui.define(
       creatingTableList: async function (localUrl, newTable) {
         let sUrl = localUrl + "TablesList";
         var that = this;
+        console.log(sUrl,newTable)
 
         // Sending data to backend-------------------------
         $.ajax({
@@ -141,6 +144,7 @@ sap.ui.define(
             type: "GET",
             url: sUrl,
             success: function (data) {
+              console.log('dataNoerthwind',data)
               var columnNames = Object.keys(data.value[0]);
               // console.log("columnNames", columnNames);
               resolve(columnNames);
