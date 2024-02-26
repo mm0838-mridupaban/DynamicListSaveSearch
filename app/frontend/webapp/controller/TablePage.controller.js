@@ -48,6 +48,7 @@ sap.ui.define(
           oEvent.getParameter("arguments").table_id
         );
         this.gettingSingleData(table_id);
+        this.gettingColumnNames(table_id);
       },
 
       // ---------------Getting the specific row data from Table List by table_id from Hana DB---------->
@@ -66,11 +67,6 @@ sap.ui.define(
           url: sUrl,
           success: function (data) {
             let entitySelected = data.entitySelected;
-            // let oModel = that.getView().getModel("tableDataModel");
-
-            // oModel.setProperty("/Datas", 0);
-            // oModel.setProperty("/OriginalEmployeeDetail", data);
-            // console.log("inside gettingSingleData",that.getView().getModel("tableDataModel").getProperty("/Datas"))
             that.gettingData(entitySelected);
           },
           error: function () {
@@ -78,6 +74,70 @@ sap.ui.define(
           },
         });
       },
+      // ----------------Getting the column Names from ColumnSettings as per tableID----->>>
+
+      gettingColumnNames: function (table_id) {
+          let sUrl =
+          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+          `ColumnSettings?$filter=table_id eq '${table_id}'`; // Filter data based on table_id
+
+
+        var that = this;
+        //Make a Call using AJAX
+
+        $.ajax({
+          type: "GET",
+          url: sUrl,
+          success: function (data) {
+            if(data.value.length < 1){
+             return console.log("No data exist for the provided tableID")
+            }
+            // console.log("dataColumnss",data.value)
+            let oModel = that.getView().getModel("tableDataModel");
+            oModel.setProperty("/ColumnSettingsDatas", data.value);
+            // console.log('NorthWindData',data.value)
+          },
+          error: function () {
+            console.error(error);
+          },
+        });
+      },
+// -------------------Filtering datas as per column_name visible status---->>>
+
+filteringDatas:function(){
+  let NorthWindDatas=this.getView().getModel("tableDataModel").getProperty("/Datas");
+  let ColumnSettingsDatas=this.getView().getModel("tableDataModel").getProperty("/ColumnSettingsDatas");
+
+  console.log('NorthWindDatas',NorthWindDatas);
+  console.log('ColumnSettingsDatas',ColumnSettingsDatas);
+  
+//   // Filter ColumnSettingsData to get only visible columns
+// let visibleColumns = ColumnSettingsDatas.filter(column => column.is_visible);
+// console.log('visibleColumns',visibleColumns)
+
+// // Form a new array with data from Datas based on visible columns
+// let newDataArray = visibleColumns.map(column => {
+//     let columnName = column.column_name;
+//     return NorthWindDatas.map(data => data[columnName]);
+// });
+
+// console.log('newDataArray',newDataArray)
+let visibleColumns = ColumnSettingsDatas.filter(column => column.is_visible);
+
+// Form a new array with data from Datas based on visible columns
+let newformedArray = NorthWindDatas.map(data => {
+    let newObj = {};
+    visibleColumns.forEach(column => {
+        newObj[column.column_name] = data[column.column_name];
+    });
+    return newObj;
+});
+this.getView().getModel("tableDataModel").setProperty("/SelectedColumnDatas");
+console.log(newformedArray);
+
+},
+
+
 
       // ---------------Getting the data from Northwind as per entity selected---------->
 
@@ -92,6 +152,7 @@ sap.ui.define(
           url: sUrl,
           success: function (data) {
             let oModel = that.getView().getModel("tableDataModel");
+            console.log('NorthWindData',data.value)
             oModel.setProperty("/Datas", data.value);
             that.creatingTable();
           },
@@ -219,6 +280,7 @@ sap.ui.define(
       },
 
       _presetSettingsItems: function (oDialog, oThis) {
+        console.log('oThis',oThis);
         oThis._presetFiltersInit(oDialog, oThis);
         oThis._presetSortsInit(oDialog, oThis);
         oThis._presetGroupsInit(oDialog, oThis);
