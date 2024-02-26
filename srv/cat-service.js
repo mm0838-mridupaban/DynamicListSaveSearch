@@ -1,22 +1,22 @@
 module.exports = (srv) => {
 
     // Reply mock data for Books...
-    srv.after ('READ', 'TablesList', (req,res)=>{
-        let lenRes=res.results.length;
-        for (let i=0;i<lenRes;i++){
-            if(i===1 || i===2){
-                res.results[i].description="From Nodejs";
-            }
-        }      
-});
-srv.before ('CREATE', 'TablesList', (req,res)=>{
-    console.log("req.body",req)
-    // let lenRes=res.results.length;
-    // for (let i=0;i<lenRes;i++){
-    //     if(i===1 || i===2){
-    //         res.results[i].description="From Nodejs";
-    //     }
-    })
+//     srv.after ('READ', 'TablesList', (req,res)=>{
+//         let lenRes=res.results.length;
+//         for (let i=0;i<lenRes;i++){
+//             if(i===1 || i===2){
+//                 res.results[i].description="From Nodejs";
+//             }
+//         }      
+// });
+// srv.before ('CREATE', 'TablesList', (req,res)=>{
+//     console.log("req.body",req)
+//     // let lenRes=res.results.length;
+//     // for (let i=0;i<lenRes;i++){
+//     //     if(i===1 || i===2){
+//     //         res.results[i].description="From Nodejs";
+//     //     }
+//     })
 
 
 }

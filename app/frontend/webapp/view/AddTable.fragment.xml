@@ -49,7 +49,7 @@
 
                     <Button
                         text="Create"
-                        press="onCreate"
+                        press="onClickCreate"
                     />
                     <Button
                         text="Cancel"

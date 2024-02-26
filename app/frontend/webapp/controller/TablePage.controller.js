@@ -111,9 +111,9 @@ sap.ui.define(
         // debugger;
 
         let oModel1 = this.getView().getModel("tableDataModel");
-        let newEmployee = oModel1.getProperty("/Datas");
-        // console.log("newEmployee", newEmployee);
-        var columnNames = Object.keys(newEmployee[0]);
+        let datas = oModel1.getProperty("/Datas");
+        // console.log("datas", datas);
+        var columnNames = Object.keys(datas[0]);
         // console.log('columnNames',columnNames)
 
         // Create columns dynamically
