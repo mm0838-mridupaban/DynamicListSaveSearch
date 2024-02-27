@@ -274,6 +274,21 @@ sap.ui.define(
         this._openDialog("MainFilter", "group", this._presetSettingsItems);
       },
 
+      // ------------For column selection----------------------->>>
+      handleOpenDialogColumns:function(){
+        this.pDialog ??= this.loadFragment({
+          name: "frontend.view.ColumnSelection",
+        });
+        this.pDialog.then((oDialog) => {
+          oDialog.open();
+        });
+
+      },
+
+
+
+      // ------------For column selection----------------------->>>
+
       _openDialog: function (sName, sPage, fInit) {
         let oView = this.getView(),
           oThis = this;
