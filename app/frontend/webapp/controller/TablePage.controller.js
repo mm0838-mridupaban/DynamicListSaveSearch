@@ -146,7 +146,8 @@ sap.ui.define(
       // -------------------Filtering datas as per column_name visible status---->>>
 
       filteringDatas: function (NorthWindDatas, ColumnSettingsDatas) {
-        console.log("looll", this.getView().getModel("tableDataModel"));
+        sap.ui.core.BusyIndicator.show();
+
         // let NorthWindDatas = this.getView()
         //   .getModel("tableDataModel")
         //   .getProperty("/Datas");
@@ -175,6 +176,8 @@ sap.ui.define(
           .setProperty("/SelectedColumnDatas", newformedArray);
 
         console.log("newformedArray",newformedArray);
+        sap.ui.core.BusyIndicator.hide();
+
       },
 
       // ----------------------------------Creating Columns and Rows with dynamic data for the Table----------------->>>
@@ -301,35 +304,47 @@ sap.ui.define(
 
       // },
 
-      updatingColumnSettings: function () {
+      updatingColumnSettings: async function () {
+        // filteringDatas(NorthWindDatas, ColumnSettingsDatas) {
         let that = this;
-        let sUrl =
-          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+
+        let sUrl =this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
           "ColumnSettings/"; // Filter data based on column_id
-        let updatedSettings = this.getView()
+
+        let ColumnSettingsDatas =await this.getView()
           .getModel("tableDataModel")
           .getProperty("/ColumnSettingsDatas");
 
-        updatedSettings.forEach((updatedSetting) => {
-          $.ajax({
-            type: "PUT",
-            url: sUrl + `${updatedSetting.column_id}`, // Adjust the URL as per your service endpoint
-            contentType: "application/json",
-            data: JSON.stringify(updatedSetting),
-            success: function (response) {
-              console.log(
-                `Column setting updated for column_id ${updatedSetting.column_id}`
-              );
-              that.handleCloseDialogColumns();
-            },
-            error: function (error) {
-              console.error(
-                `Error updating column setting for column_id ${updatedSetting.column_id}:`,
-                error
-              );
-            },
-          });
-        });
+        let NorthWindDatas =await this.getView()
+          .getModel("tableDataModel")
+          .getProperty("/Datas");
+         await this.filteringDatas(NorthWindDatas, ColumnSettingsDatas);
+         await this.creatingTable();
+          this.handleCloseDialogColumns();
+
+
+          // API for updating ColumnsSettings table *******************************************************************************************************************************
+
+        // ColumnSettingsDatas.forEach((updatedSetting) => {
+        //   $.ajax({
+        //     type: "PUT",
+        //     url: sUrl + `${updatedSetting.column_id}`, // Adjust the URL as per your service endpoint
+        //     contentType: "application/json",
+        //     data: JSON.stringify(updatedSetting),
+        //     success: function (response) {
+        //       console.log(
+        //         `Column setting updated for column_id ${updatedSetting.column_id}`
+        //       );
+        //       that.handleCloseDialogColumns();
+        //     },
+        //     error: function (error) {
+        //       console.error(
+        //         `Error updating column setting for column_id ${updatedSetting.column_id}:`,
+        //         error
+        //       );
+        //     },
+        //   });
+        // });
       },
       //   updatingColumnSettings: function () {
       //     let that = this;
