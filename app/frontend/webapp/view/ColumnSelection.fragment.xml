@@ -2,8 +2,31 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
 >
-   <Dialog >
-   <Text text="Helloo"/>
-   </Dialog>
-
+    <Dialog>
+        <Table
+            id="idProductsTable"
+            inset="false"
+            items="{
+			path: 'tableDataModel>/ColumnSettingsDatas'
+		}"
+        >
+            <columns>
+                <Column width="auto">
+                    <Text text="Select Columns" />
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem vAlign="Middle">
+                    <cells>
+                        <CheckBox
+                            text="{tableDataModel>column_name}"
+                            selected="{tableDataModel>is_visible}"
+                        />
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+            <Button text="Update" icon="sap-icon://accept" press="updatingColumnSettings" type="Transparent" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false"/>
+            <Button text="Cancel" icon="sap-icon://cancel" press="checking"  type="Transparent" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false"/>
+    </Dialog>
 </core:FragmentDefinition>

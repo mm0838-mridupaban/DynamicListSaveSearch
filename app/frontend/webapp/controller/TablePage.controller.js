@@ -109,7 +109,7 @@ sap.ui.define(
             let oModel = that.getView().getModel("tableDataModel");
             oModel.setProperty("/ColumnSettingsDatas", data.value);
             resolve(data.value)
-            // console.log('NorthWindData',data.value)
+            console.log('gettingColumnSettingsDatas',data.value)
           },
           error: function () {
             console.error(error);
@@ -261,7 +261,7 @@ sap.ui.define(
 
       // -------------------------------------Settings 2 option-------------------------------------------------
 
-      // Opens View Settings Dialog on Filter page
+      // Opens View Settings Dialog on Sort page
       handleOpenDialogSort: function () {
         this._openDialog("MainFilter", "sort", this._presetSettingsItems);
       },
@@ -269,12 +269,13 @@ sap.ui.define(
       handleOpenDialogFilter: function () {
         this._openDialog("MainFilter", "filter", this._presetSettingsItems);
       },
-      // Opens View Settings Dialog on Filter page
+      // Opens View Settings Dialog on Group page
       handleOpenDialogGroup: function () {
         this._openDialog("MainFilter", "group", this._presetSettingsItems);
       },
 
-      // ------------For column selection----------------------->>>
+
+      // // ------------For column selection------Starts----------------->>>
       handleOpenDialogColumns:function(){
         this.pDialog ??= this.loadFragment({
           name: "frontend.view.ColumnSelection",
@@ -284,10 +285,17 @@ sap.ui.define(
         });
 
       },
+      updatingColumnSettings:function(){
+
+
+      },
+      checking:function(){
+        console.log("UpdatedColumnSettingsDatas",this.getView().getModel("tableDataModel").getProperty("/ColumnSettingsDatas"))
+      },
 
 
 
-      // ------------For column selection----------------------->>>
+      // // ------------For column selection------------Ends----------->>>
 
       _openDialog: function (sName, sPage, fInit) {
         let oView = this.getView(),
