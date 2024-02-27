@@ -53,11 +53,11 @@ sap.ui.define(
       },
       onEveryLoad: async function (table_id) {
         let entitySelected = await this.gettingTableRowData(table_id);
-        let NorthWindDatas =await this.gettingNorthwindData(entitySelected);
-        let ColumnSettingsDatas=await this.gettingColumnSettings(table_id);
-        console.log('letssss',NorthWindDatas)
-        console.log('letssssColl',ColumnSettingsDatas)
-        await this.filteringDatas(NorthWindDatas,ColumnSettingsDatas);
+        let NorthWindDatas = await this.gettingNorthwindData(entitySelected);
+        let ColumnSettingsDatas = await this.gettingColumnSettings(table_id);
+        console.log("letssss", NorthWindDatas);
+        console.log("letssssColl", ColumnSettingsDatas);
+        await this.filteringDatas(NorthWindDatas, ColumnSettingsDatas);
         this.creatingTable();
       },
 
@@ -91,30 +91,29 @@ sap.ui.define(
 
       gettingColumnSettings: function (table_id) {
         return new Promise((resolve, reject) => {
-        let sUrl =
-          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
-          `ColumnSettings?$filter=table_id eq '${table_id}'`; // Filter data based on table_id
+          let sUrl =
+            this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+            `ColumnSettings?$filter=table_id eq '${table_id}'`; // Filter data based on table_id
+          var that = this;
+          //Make a Call using AJAX
 
-        var that = this;
-        //Make a Call using AJAX
-
-        $.ajax({
-          type: "GET",
-          url: sUrl,
-          success: function (data) {
-            if (data.value.length < 1) {
-              return console.log("No data exist for the provided tableID");
-            }
-            console.log("dataColumnss", data.value);
-            let oModel = that.getView().getModel("tableDataModel");
-            oModel.setProperty("/ColumnSettingsDatas", data.value);
-            resolve(data.value)
-            console.log('gettingColumnSettingsDatas',data.value)
-          },
-          error: function () {
-            console.error(error);
-          },
-        });
+          $.ajax({
+            type: "GET",
+            url: sUrl,
+            success: function (data) {
+              if (data.value.length < 1) {
+                return console.log("No data exist for the provided tableID");
+              }
+              console.log("dataColumnss", data.value);
+              let oModel = that.getView().getModel("tableDataModel");
+              oModel.setProperty("/ColumnSettingsDatas", data.value);
+              resolve(data.value);
+              console.log("gettingColumnSettingsDatas", data.value);
+            },
+            error: function () {
+              console.error(error);
+            },
+          });
         });
       },
 
@@ -122,32 +121,31 @@ sap.ui.define(
 
       gettingNorthwindData: function (entityName) {
         return new Promise((resolve, reject) => {
+          let sUrl = `https://services.odata.org/v4/northwind/northwind.svc/${entityName}`;
+          var that = this;
+          //Make a Call using AJAX
+          // console.log("inside gettingNorthwindData",that.getView().getModel("tableDataModel").getProperty("/Datas"))
 
-        let sUrl = `https://services.odata.org/v4/northwind/northwind.svc/${entityName}`;
-        var that = this;
-        //Make a Call using AJAX
-        // console.log("inside gettingNorthwindData",that.getView().getModel("tableDataModel").getProperty("/Datas"))
-
-        $.ajax({
-          type: "GET",
-          url: sUrl,
-          success: function (data) {
-            let oModel = that.getView().getModel("tableDataModel");
-            // console.log("NorthWindData", data.value);
-            oModel.setProperty("/Datas", data.value);
-            resolve(data.value)
-            // that.creatingTable();
-          },
-          error: function () {
-            console.error(error);
-          },
-        });
+          $.ajax({
+            type: "GET",
+            url: sUrl,
+            success: function (data) {
+              let oModel = that.getView().getModel("tableDataModel");
+              // console.log("NorthWindData", data.value);
+              oModel.setProperty("/Datas", data.value);
+              resolve(data.value);
+              // that.creatingTable();
+            },
+            error: function () {
+              console.error(error);
+            },
+          });
         });
       },
 
       // -------------------Filtering datas as per column_name visible status---->>>
 
-      filteringDatas: function (NorthWindDatas,ColumnSettingsDatas) {
+      filteringDatas: function (NorthWindDatas, ColumnSettingsDatas) {
         console.log("looll", this.getView().getModel("tableDataModel"));
         // let NorthWindDatas = this.getView()
         //   .getModel("tableDataModel")
@@ -176,7 +174,7 @@ sap.ui.define(
           .getModel("tableDataModel")
           .setProperty("/SelectedColumnDatas", newformedArray);
 
-        console.log(newformedArray);
+        console.log("newformedArray",newformedArray);
       },
 
       // ----------------------------------Creating Columns and Rows with dynamic data for the Table----------------->>>
@@ -200,7 +198,8 @@ sap.ui.define(
           oTable.addColumn(
             new sap.m.Column({
               width: "10rem",
-              header: new sap.m.Label({ text: columnName }),
+              header: new sap.m.Label({ text: columnName })
+
               // width: "auto", // Set width to auto for responsive behavior
             })
           );
@@ -274,26 +273,92 @@ sap.ui.define(
         this._openDialog("MainFilter", "group", this._presetSettingsItems);
       },
 
-
       // // ------------For column selection------Starts----------------->>>
-      handleOpenDialogColumns:function(){
+      handleOpenDialogColumns: function () {
         this.pDialog ??= this.loadFragment({
           name: "frontend.view.ColumnSelection",
         });
+
         this.pDialog.then((oDialog) => {
           oDialog.open();
         });
-
       },
-      updatingColumnSettings:function(){
+      handleCloseDialogColumns: async function () {
+        // Get the original employee detail data from the model
+        // var oModel = this.getView().getModel("EmployeeData");
+        // var originalEmployeeDetail = oModel.getProperty("/OriginalEmployeeDetail");
 
+        // console.log('originalEmployeeDetail',originalEmployeeDetail)
 
+        // // Reset the employee detail data to the original values
+        // await oModel.setProperty("/EmployeeDetail", originalEmployeeDetail);
+
+        // Close the dialog
+        // await this.onLoad();
+        this.getView().byId("ColumnSettingsDialog").close();
       },
-      checking:function(){
-        console.log("UpdatedColumnSettingsDatas",this.getView().getModel("tableDataModel").getProperty("/ColumnSettingsDatas"))
+      // updatingColumnSettings:function(){
+
+      // },
+
+      updatingColumnSettings: function () {
+        let that = this;
+        let sUrl =
+          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+          "ColumnSettings/"; // Filter data based on column_id
+        let updatedSettings = this.getView()
+          .getModel("tableDataModel")
+          .getProperty("/ColumnSettingsDatas");
+
+        updatedSettings.forEach((updatedSetting) => {
+          $.ajax({
+            type: "PUT",
+            url: sUrl + `${updatedSetting.column_id}`, // Adjust the URL as per your service endpoint
+            contentType: "application/json",
+            data: JSON.stringify(updatedSetting),
+            success: function (response) {
+              console.log(
+                `Column setting updated for column_id ${updatedSetting.column_id}`
+              );
+              that.handleCloseDialogColumns();
+            },
+            error: function (error) {
+              console.error(
+                `Error updating column setting for column_id ${updatedSetting.column_id}:`,
+                error
+              );
+            },
+          });
+        });
       },
+      //   updatingColumnSettings: function () {
+      //     let that = this;
+      //     let sUrl = this.getOwnerComponent().getModel("mainModel").getServiceUrl() + "ColumnSettings/"; // Filter data based on column_id
+      //     let updatedSettings = this.getView().getModel("tableDataModel").getProperty("/ColumnSettingsDatas");
 
+      //     let promises = []; // Array to store promises for each AJAX request
 
+      //     updatedSettings.forEach(updatedSetting => {
+      //         let promise = $.ajax({
+      //             type: "PUT",
+      //             url: sUrl + `${updatedSetting.column_id}`, // Adjust the URL as per your service endpoint
+      //             contentType: "application/json",
+      //             data: JSON.stringify(updatedSetting)
+      //         });
+
+      //         promises.push(promise);
+      //     });
+
+      //     // After all promises are resolved, update the table
+      //     Promise.all(promises).then(() => {
+      //         // Update the table data model
+      //         that.getView().getModel("tableDataModel").refresh(); // Refresh the model to reflect changes
+      //         console.log("Column settings updated successfully");
+      //         that.handleCloseDialogColumns();
+      //     }).catch(error => {
+      //         console.error("Error updating column settings:", error);
+      //     });
+      // },
 
       // // ------------For column selection------------Ends----------->>>
 

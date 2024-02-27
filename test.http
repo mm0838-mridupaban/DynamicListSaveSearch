@@ -1,12 +1,54 @@
 GET http://localhost:4004/odata/v4/catalog/TablesList
 ###
 
+# POST http://localhost:4004/odata/v4/catalog/TablesList
+# headers: {"X-Requested-With": "XMLHttpsRequest"}
+# Content-Type: application/json
+# {"table_id": "99",
+# "description": "Demo Table 17",
+# "entitySelected": "Labours"
+# }
+###
 POST http://localhost:4004/odata/v4/catalog/TablesList
-headers: {"X-Requested-With": "XMLHttpsRequest"}
 Content-Type: application/json
-{"table_id": "17",
+X-Requested-With: XMLHttpRequest
+
+{"table_id": "99",
 "description": "Demo Table 17",
 "entitySelected": "Labours"
 }
 
-# GET http://localhost:4004/odata/v4/catalog/api/tablesList
+###
+# Get ColumnSettings data as per table id
+GET http://localhost:4004/odata/v4/catalog/ColumnSettings
+###
+# Update ColumnSettings data as per table id
+GET  http://localhost:4004/odata/v4/catalog/ColumnSettings?$filter=column_id eq '1'
+###
+GET  http://localhost:4004/odata/v4/catalog/ColumnSettings?$filter=column_id eq '1'
+###
+
+# Posting data to ColumnSettings 
+POST  http://localhost:4004/odata/v4/catalog/ColumnSettings
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{"column_id":"15",
+"table_id":"99",
+"column_name":"Phone",
+"display_order":1,
+"is_visible":true
+}
+###
+
+# Updating data in ColumnSettings by column_id
+PUT  http://localhost:4004/odata/v4/catalog/ColumnSettings/1
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{"column_id":"1",
+"table_id":"9",
+"column_name":"ShipperID",
+"display_order":0,
+"is_visible":false
+}

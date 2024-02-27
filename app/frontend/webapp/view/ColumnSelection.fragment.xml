@@ -2,7 +2,7 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
 >
-    <Dialog>
+    <Dialog id="ColumnSettingsDialog">
         <Table
             id="idProductsTable"
             inset="false"
@@ -27,6 +27,6 @@
             </items>
         </Table>
             <Button text="Update" icon="sap-icon://accept" press="updatingColumnSettings" type="Transparent" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false"/>
-            <Button text="Cancel" icon="sap-icon://cancel" press="checking"  type="Transparent" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false"/>
+            <Button text="Cancel" icon="sap-icon://cancel" press="handleCloseDialogColumns"  type="Transparent" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false"/>
     </Dialog>
 </core:FragmentDefinition>
