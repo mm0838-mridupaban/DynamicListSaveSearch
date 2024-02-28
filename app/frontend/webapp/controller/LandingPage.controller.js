@@ -51,8 +51,8 @@ sap.ui.define(
           .getModel("mainModel")
           .getServiceUrl();
 
-        console.log("entity", entity, "table_id", table_id);
-        console.log("localUrl", localUrl, "newTable", newTable);
+        // console.log("entity", entity, "table_id", table_id);
+        // console.log("localUrl", localUrl, "newTable", newTable);
 
         await this.creatingTableList(localUrl,newTable);
         let columnNames = await this.gettingNorthWindData(entity);

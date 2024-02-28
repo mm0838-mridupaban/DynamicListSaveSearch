@@ -25,6 +25,7 @@ sap.ui.define(
     ViewSettingsFilterItem
   ) {
     "use strict";
+    var table_id;
 
     return Controller.extend("frontend.controller.TablePage", {
       onInit: function (oEvent) {
@@ -44,18 +45,18 @@ sap.ui.define(
       },
 
       onObjectMatched(oEvent) {
-        let table_id = window.decodeURIComponent(
+        table_id = window.decodeURIComponent(
           oEvent.getParameter("arguments").table_id
         );
         // this.gettingSingleData(table_id);
-        this.onEveryLoad(table_id);
+        this.onEveryLoad();
         // this.gettingColumnSettings(table_id);
       },
-      onEveryLoad: async function (table_id) {
+      onEveryLoad: async function () {
         let entitySelected = await this.gettingTableRowData(table_id);
         let NorthWindDatas = await this.gettingNorthwindData(entitySelected);
         let ColumnSettingsDatas = await this.gettingColumnSettings(table_id);
-        console.log("letssss", NorthWindDatas);
+        // console.log("letssss", NorthWindDatas);
         console.log("letssssColl", ColumnSettingsDatas);
         await this.filteringDatas(NorthWindDatas, ColumnSettingsDatas);
         this.creatingTable();
@@ -104,11 +105,11 @@ sap.ui.define(
               if (data.value.length < 1) {
                 return console.log("No data exist for the provided tableID");
               }
-              console.log("dataColumnss", data.value);
+              // console.log("dataColumnss", data.value);
               let oModel = that.getView().getModel("tableDataModel");
               oModel.setProperty("/ColumnSettingsDatas", data.value);
               resolve(data.value);
-              console.log("gettingColumnSettingsDatas", data.value);
+              // console.log("gettingColumnSettingsDatas", data.value);
             },
             error: function () {
               console.error(error);
@@ -175,9 +176,8 @@ sap.ui.define(
           .getModel("tableDataModel")
           .setProperty("/SelectedColumnDatas", newformedArray);
 
-        console.log("newformedArray",newformedArray);
+        // console.log("newformedArray",newformedArray);
         sap.ui.core.BusyIndicator.hide();
-
       },
 
       // ----------------------------------Creating Columns and Rows with dynamic data for the Table----------------->>>
@@ -191,17 +191,17 @@ sap.ui.define(
 
         let oModel1 = this.getView().getModel("tableDataModel");
         let datas = oModel1.getProperty("/SelectedColumnDatas");
-        console.log("datas345", datas);
+        // console.log("datas345", datas);
         // console.log("datas", datas);
         var columnNames = Object.keys(datas[0]);
-        console.log("columnNames", columnNames);
+        // console.log("columnNames", columnNames);
 
         // Create columns dynamically
         columnNames.forEach(function (columnName) {
           oTable.addColumn(
             new sap.m.Column({
               width: "10rem",
-              header: new sap.m.Label({ text: columnName })
+              header: new sap.m.Label({ text: columnName }),
 
               // width: "auto", // Set width to auto for responsive behavior
             })
@@ -308,22 +308,22 @@ sap.ui.define(
         // filteringDatas(NorthWindDatas, ColumnSettingsDatas) {
         let that = this;
 
-        let sUrl =this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+        let sUrl =
+          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
           "ColumnSettings/"; // Filter data based on column_id
 
-        let ColumnSettingsDatas =await this.getView()
+        let ColumnSettingsDatas = await this.getView()
           .getModel("tableDataModel")
           .getProperty("/ColumnSettingsDatas");
 
-        let NorthWindDatas =await this.getView()
+        let NorthWindDatas = await this.getView()
           .getModel("tableDataModel")
           .getProperty("/Datas");
-         await this.filteringDatas(NorthWindDatas, ColumnSettingsDatas);
-         await this.creatingTable();
-          this.handleCloseDialogColumns();
+        await this.filteringDatas(NorthWindDatas, ColumnSettingsDatas);
+        await this.creatingTable();
+        this.handleCloseDialogColumns();
 
-
-          // API for updating ColumnsSettings table *******************************************************************************************************************************
+        // API for updating ColumnsSettings table *******************************************************************************************************************************
 
         // ColumnSettingsDatas.forEach((updatedSetting) => {
         //   $.ajax({
@@ -401,7 +401,7 @@ sap.ui.define(
       },
 
       _presetSettingsItems: function (oDialog, oThis) {
-        console.log("oThis", oThis);
+        // console.log("oThis", oThis);
         oThis._presetFiltersInit(oDialog, oThis);
         oThis._presetSortsInit(oDialog, oThis);
         oThis._presetGroupsInit(oDialog, oThis);
@@ -439,9 +439,9 @@ sap.ui.define(
             .getData(),
           oTable = oDialogParent.byId("idMyTable"),
           oColumns = oTable.getColumns();
-        console.log("oColumns", oColumns);
+        // console.log("oColumns", oColumns);
         // console.log('oTable',oTable);
-        console.log("oModelData", oModelData.Datas);
+        // console.log("oModelData", oModelData.Datas);
 
         // Loop every column of the table
         oColumns.forEach((column) => {
@@ -461,8 +461,8 @@ sap.ui.define(
                   key: columnId + "___" + "EQ___" + oItem, // JSON property = Unique value
                 })
             );
-          console.log("columnId", columnId);
-          console.log("oUniqueItems", oUniqueItems);
+          // console.log("columnId", columnId);
+          // console.log("oUniqueItems", oUniqueItems);
 
           // Set this values as selectable on the filter list
           oDialog.addFilterItem(
@@ -507,8 +507,8 @@ sap.ui.define(
 
       handleConfirm: function (oEvent) {
         let oTable = this.byId("idMyTable"),
-          mParams = oEvent.getParameters(),
           oBinding = oTable.getBinding("items"),
+          mParams = oEvent.getParameters(),
           aFilters = [],
           sPath,
           bDescending,
@@ -525,6 +525,8 @@ sap.ui.define(
               sValue1 = aSplit[2],
               sValue2 = aSplit[3],
               oFilter = new Filter(sPath, sOperator, sValue1, sValue2);
+            console.log("filtersPath", mParams.filterString);
+            console.log("filterKeys", mParams.filterKeys);
             aFilters.push(oFilter);
           });
           // apply filter settings
@@ -540,6 +542,19 @@ sap.ui.define(
           bDescending = mParams.sortDescending;
           aSorters.push(new Sorter(sPath, bDescending));
           // apply the selected sort and group settings
+
+          let setting_name = mParams.sortDescending ? "DESC" : "ASC";
+          // Data format to send to backend------------------------------<<<<<<<<<<<<<<
+          let datas = {
+            table_id: table_id,
+            column_name: sPath,
+            feature_name: "sort",
+            setting_name: setting_name,
+          };
+          this.getView()
+            .getModel("tableDataModel")
+            .setProperty("/sortingDatas", datas);
+          console.log("sortDatas", datas);
           oBinding.sort(aSorters);
         }
         // Grouping
@@ -549,6 +564,19 @@ sap.ui.define(
           vGroup = this.mGroupFunctions[sPath];
           aGroups.push(new Sorter(sPath, bDescending, vGroup));
           // apply the selected group settings
+          console.log("groupBySpath", sPath);
+          let setting_name = mParams.groupDescending ? "DESC" : "ASC";
+
+          let datas = {
+            table_id: table_id,
+            column_name: sPath,
+            feature_name: "groupBy",
+            setting_name: setting_name,
+          };
+          this.getView()
+            .getModel("tableDataModel")
+            .setProperty("/groupingDatas", datas);
+          console.log("groupDatas", datas);
           oBinding.sort(aGroups);
         } else if (this.groupReset) {
           oBinding.sort();
@@ -558,7 +586,28 @@ sap.ui.define(
 
       // --------------------------------------------------------On Save button press--------------------->>>>>>>>>>>
 
-      onSavePress: function () {},
+      onSavePress: function () {
+        let columnSettingsDatas = [];
+        let sortingDatas = this.getView()
+          .getModel("tableDataModel")
+          .getProperty("/sortingDatas");
+          if(sortingDatas){
+            columnSettingsDatas.push(sortingDatas);
+          }
+
+        console.log("sortingDatas", sortingDatas);
+        let groupingDatas = this.getView()
+          .getModel("tableDataModel")
+          .getProperty("/groupingDatas");
+          if(sortingDatas){
+            columnSettingsDatas.push(groupingDatas);
+          }
+        console.log("columnSettingsDatas", columnSettingsDatas);
+
+        if(columnSettingsDatas.length > 0){
+          console.log("Send me to backend")
+        }
+      },
     });
   }
 );
