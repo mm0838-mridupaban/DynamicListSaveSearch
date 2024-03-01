@@ -168,9 +168,13 @@ sap.ui.define(
             type: "GET",
             url: `${sUrl}?$orderby=column_id desc&$top=1`,
             success: function (data) {
-              let lastId = data.value[0].column_id; // Assuming the response contains an array with a single object
-              let lastIdNumber = parseInt(lastId.split("_").pop()); // Extract the last ID number
-              console.log("lastIdNumber", typeof lastIdNumber);
+              var lastIdNumber =0;
+              if(data.value.length > 0)
+              {
+                // let lastId = data.value[0].column_id; // Assuming the response contains an array with a single object
+                lastIdNumber = data.value[0].column_id; // Assuming the response contains an array with a single object
+              //  lastIdNumber = parseInt(lastId.split("_").pop()); // Extract the last ID number
+              }
               resolve(lastIdNumber);
             },
           });
@@ -188,7 +192,8 @@ sap.ui.define(
         // Loop through each column name and create a new entry in the ColumnSettings entity
         columnNames.forEach((columnName, index) => {
           let is_visible = index === 0; // Set is_visible to true only for the first column
-          let columnId = "" + (lastIdNumber + index + 1);
+          // let columnId = "" + (lastIdNumber + index + 1);
+          let columnId = (lastIdNumber + index + 1);
 
           let newColumnSetting = {
             column_id: columnId,

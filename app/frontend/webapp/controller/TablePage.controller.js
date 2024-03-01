@@ -202,7 +202,6 @@ sap.ui.define(
             new sap.m.Column({
               width: "10rem",
               header: new sap.m.Label({ text: columnName }),
-
               // width: "auto", // Set width to auto for responsive behavior
             })
           );
@@ -305,13 +304,6 @@ sap.ui.define(
       // },
 
       updatingColumnSettings: async function () {
-        // filteringDatas(NorthWindDatas, ColumnSettingsDatas) {
-        let that = this;
-
-        let sUrl =
-          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
-          "ColumnSettings/"; // Filter data based on column_id
-
         let ColumnSettingsDatas = await this.getView()
           .getModel("tableDataModel")
           .getProperty("/ColumnSettingsDatas");
@@ -319,61 +311,44 @@ sap.ui.define(
         let NorthWindDatas = await this.getView()
           .getModel("tableDataModel")
           .getProperty("/Datas");
+        // filteringDatas(NorthWindDatas, ColumnSettingsDatas) {
+
         await this.filteringDatas(NorthWindDatas, ColumnSettingsDatas);
         await this.creatingTable();
         this.handleCloseDialogColumns();
-
-        // API for updating ColumnsSettings table *******************************************************************************************************************************
-
-        // ColumnSettingsDatas.forEach((updatedSetting) => {
-        //   $.ajax({
-        //     type: "PUT",
-        //     url: sUrl + `${updatedSetting.column_id}`, // Adjust the URL as per your service endpoint
-        //     contentType: "application/json",
-        //     data: JSON.stringify(updatedSetting),
-        //     success: function (response) {
-        //       console.log(
-        //         `Column setting updated for column_id ${updatedSetting.column_id}`
-        //       );
-        //       that.handleCloseDialogColumns();
-        //     },
-        //     error: function (error) {
-        //       console.error(
-        //         `Error updating column setting for column_id ${updatedSetting.column_id}:`,
-        //         error
-        //       );
-        //     },
-        //   });
-        // });
       },
-      //   updatingColumnSettings: function () {
-      //     let that = this;
-      //     let sUrl = this.getOwnerComponent().getModel("mainModel").getServiceUrl() + "ColumnSettings/"; // Filter data based on column_id
-      //     let updatedSettings = this.getView().getModel("tableDataModel").getProperty("/ColumnSettingsDatas");
 
-      //     let promises = []; // Array to store promises for each AJAX request
+      // API for updating ColumnsSettings table *******************************************************************************************************************************
+      savingColumnSettings: async function () {
+        let that = this;
+        let ColumnSettingsDatas = await this.getView()
+          .getModel("tableDataModel")
+          .getProperty("/ColumnSettingsDatas");
+        let sUrl =
+          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+          "ColumnSettings/"; // Filter data based on column_id
 
-      //     updatedSettings.forEach(updatedSetting => {
-      //         let promise = $.ajax({
-      //             type: "PUT",
-      //             url: sUrl + `${updatedSetting.column_id}`, // Adjust the URL as per your service endpoint
-      //             contentType: "application/json",
-      //             data: JSON.stringify(updatedSetting)
-      //         });
-
-      //         promises.push(promise);
-      //     });
-
-      //     // After all promises are resolved, update the table
-      //     Promise.all(promises).then(() => {
-      //         // Update the table data model
-      //         that.getView().getModel("tableDataModel").refresh(); // Refresh the model to reflect changes
-      //         console.log("Column settings updated successfully");
-      //         that.handleCloseDialogColumns();
-      //     }).catch(error => {
-      //         console.error("Error updating column settings:", error);
-      //     });
-      // },
+        ColumnSettingsDatas.forEach((updatedSetting) => {
+          $.ajax({
+            type: "PUT",
+            url: sUrl + `${updatedSetting.column_id}`, // Adjust the URL as per your service endpoint
+            contentType: "application/json",
+            data: JSON.stringify(updatedSetting),
+            success: function (response) {
+              console.log(
+                `Column setting updated for column_id ${updatedSetting.column_id}`
+              );
+              // that.handleCloseDialogColumns();
+            },
+            error: function (error) {
+              console.error(
+                `Error updating column setting for column_id ${updatedSetting.column_id}:`,
+                error
+              );
+            },
+          });
+        });
+      },
 
       // // ------------For column selection------------Ends----------->>>
 
@@ -506,7 +481,8 @@ sap.ui.define(
       },
 
       handleConfirm: function (oEvent) {
-        let oTable = this.byId("idMyTable"),
+        let that = this,
+          oTable = this.byId("idMyTable"),
           oBinding = oTable.getBinding("items"),
           mParams = oEvent.getParameters(),
           aFilters = [],
@@ -525,8 +501,17 @@ sap.ui.define(
               sValue1 = aSplit[2],
               sValue2 = aSplit[3],
               oFilter = new Filter(sPath, sOperator, sValue1, sValue2);
-            console.log("filtersPath", mParams.filterString);
+
             console.log("filterKeys", mParams.filterKeys);
+
+            if (Object.keys(mParams.filterKeys).length > 0) {
+              const filteredDatas = that.formatFilterDatas(mParams.filterKeys);
+              console.log("filteredDatas", filteredDatas);
+              that
+                .getView()
+                .getModel("tableDataModel")
+                .setProperty("/filteredDatas", filteredDatas);
+            }
             aFilters.push(oFilter);
           });
           // apply filter settings
@@ -550,6 +535,7 @@ sap.ui.define(
             column_name: sPath,
             feature_name: "sort",
             setting_name: setting_name,
+            setting_value: "",
           };
           this.getView()
             .getModel("tableDataModel")
@@ -572,6 +558,7 @@ sap.ui.define(
             column_name: sPath,
             feature_name: "groupBy",
             setting_name: setting_name,
+            setting_value: "",
           };
           this.getView()
             .getModel("tableDataModel")
@@ -586,27 +573,250 @@ sap.ui.define(
 
       // --------------------------------------------------------On Save button press--------------------->>>>>>>>>>>
 
-      onSavePress: function () {
-        let columnSettingsDatas = [];
+      onSavePress: async function () {
+        let that = this;
+
+        let sUrl =
+          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+          "FeatureSettings";
+
+        let lastSettingsId = await that.getLastSettingId(sUrl);
+
+        let featureSettingsDatas = []; // An empty array to store sorting,filtering and grouping datas
+
         let sortingDatas = this.getView()
           .getModel("tableDataModel")
           .getProperty("/sortingDatas");
-          if(sortingDatas){
-            columnSettingsDatas.push(sortingDatas);
-          }
+        if (sortingDatas) {
+          featureSettingsDatas.push(sortingDatas);
+        }
 
-        console.log("sortingDatas", sortingDatas);
         let groupingDatas = this.getView()
           .getModel("tableDataModel")
           .getProperty("/groupingDatas");
-          if(sortingDatas){
-            columnSettingsDatas.push(groupingDatas);
-          }
-        console.log("columnSettingsDatas", columnSettingsDatas);
-
-        if(columnSettingsDatas.length > 0){
-          console.log("Send me to backend")
+        if (groupingDatas) {
+          featureSettingsDatas.push(groupingDatas);
         }
+
+        let filteredDatas = this.getView()
+          .getModel("tableDataModel")
+          .getProperty("/filteredDatas");
+        if (filteredDatas) {
+          featureSettingsDatas.push(...filteredDatas);
+        }
+        console.log("featureSettingsDatas", featureSettingsDatas);
+        that.savingColumnSettings();
+        if (featureSettingsDatas.length > 0) {
+          const oldSettingDatas = await that.checkingExistsingEntry();
+          console.log("oldSettingDatas", oldSettingDatas);
+          console.log("featureSettingsDatas", featureSettingsDatas);
+          if (oldSettingDatas.length > 0) {
+            // if data exist with the same table_id
+
+            // Form a new arr2 by removing the "id" key from arr1
+            let noIdOldSettingsData = oldSettingDatas.map(
+              ({ setting_id, ...rest }) => rest
+            );
+
+            if (noIdOldSettingsData.length > 0) {
+              // Create a function to compare objects
+              function areEqual(obj1, obj2) {
+                return JSON.stringify(obj1) === JSON.stringify(obj2);
+              }
+
+              // Filter out objects from arr2 that are also in arr1
+              let uniqueSettingsData = featureSettingsDatas.filter(
+                (obj2) =>
+                  !noIdOldSettingsData.some((obj1) => areEqual(obj1, obj2))
+              );
+
+              if (uniqueSettingsData.length > 0) {
+                uniqueSettingsData.forEach((item, index) => {
+                  let setting_id = lastSettingsId + index + 1;
+                  // console.log("item",item);
+                  // console.log("setting_id",setting_id);
+
+                  let newFeatureSetting = {
+                    setting_id: setting_id,
+                    table_id: item.table_id,
+                    column_name: item.column_name,
+                    feature_name: item.feature_name,
+                    setting_name: item.setting_name,
+                    setting_value: item.setting_value,
+                  };
+                  console.log("newFeatureSetting", newFeatureSetting);
+                  console.log("Old data exisittinggg entry");
+
+                  // Make a POST request to create a new entry in the FeatureSetting entity
+                  $.ajax({
+                    type: "POST",
+                    url: sUrl, // Adjust the URL as per your service endpoint
+                    contentType: "application/json",
+                    data: JSON.stringify(newFeatureSetting),
+                    success: function (response) {
+                      that.savingColumnSettings();
+                      console.log("New feature setting created:", response);
+                    },
+                    error: function (error) {
+                      console.error("Error creating column setting:", error);
+                    },
+                  });
+                });
+
+                console.log("uniqueSettingsData", uniqueSettingsData);
+              } else window.alert("No changes found");
+            }
+          } else {
+            //-------------------if its a new entry-------
+
+            featureSettingsDatas.forEach((item, index) => {
+              let setting_id = lastSettingsId + index + 1;
+
+              let newFeatureSetting = {
+                setting_id: setting_id,
+                table_id: item.table_id,
+                column_name: item.column_name,
+                feature_name: item.feature_name,
+                setting_name: item.setting_name,
+                setting_value: item.setting_value,
+              };
+              console.log("newFeatureSetting", newFeatureSetting);
+              console.log("New Entry");
+
+              // Make a POST request to create a new entry in the FeatureSetting entity
+              $.ajax({
+                type: "POST",
+                url: sUrl, // Adjust the URL as per your service endpoint
+                contentType: "application/json",
+                data: JSON.stringify(newFeatureSetting),
+                success: function (response) {
+                  that.savingColumnSettings();
+                  console.log("New column setting created:", response);
+                },
+                error: function (error) {
+                  console.error("Error creating column setting:", error);
+                },
+              });
+            });
+          }
+
+          // let lastSettingsId = await that.getLastSettingId(sUrl);
+          // console.log("Send me to backend", lastSettingsId);
+        } else window.alert("Saved only Column Settings");
+      },
+
+      // ------------------Formating Filter keys into data------------->>>
+      formatFilterDatas: function (data) {
+        const formattedData = {};
+
+        for (const key in data) {
+          if (data.hasOwnProperty(key)) {
+            const [field, , content] = key.split("___");
+            const formattedContent = content.replace(/_/g, " ");
+            if (!formattedData[field]) {
+              formattedData[field] = [];
+            }
+            formattedData[field].push(formattedContent);
+          }
+        }
+
+        for (const field in formattedData) {
+          if (formattedData.hasOwnProperty(field)) {
+            formattedData[field] = formattedData[field].join(", ");
+          }
+        }
+
+        // console.log(formattedData);
+
+        const FilterDatas = [];
+        for (const field in formattedData) {
+          if (formattedData.hasOwnProperty(field)) {
+            FilterDatas.push({
+              table_id: table_id,
+              feature_name: "filter",
+              column_name: field,
+              setting_name: "",
+              setting_value: formattedData[field],
+            });
+          }
+        }
+        return FilterDatas;
+      },
+      // ------------------Getting last id from the FeatureSettings table--------------->>>>>>>>>>>
+
+      getLastSettingId: function (sUrl) {
+        return new Promise((resolve, reject) => {
+          $.ajax({
+            type: "GET",
+            url: `${sUrl}?$orderby=setting_id desc&$top=1`,
+            success: function (data) {
+              // console.log("dataFromColumnSettings", data);
+
+              // var lastIdNumber =0;
+              // if(data.value.length > 0)
+              // {
+              //   // let lastId = data.value[0].column_id; // Assuming the response contains an array with a single object
+              //   lastIdNumber = data.value[0].column_id; // Assuming the response contains an array with a single object
+              // //  lastIdNumber = parseInt(lastId.split("_").pop()); // Extract the last ID number
+              // }
+              // console.log("lastIdNumber", typeof lastIdNumber);
+              // resolve(lastIdNumber);
+              var lastIdNumber = 0;
+              if (data.value.length > 0) {
+                lastIdNumber = data.value[0].setting_id; // Assuming the response contains an array with a single object
+                // lastIdNumber = parseInt(lastId.split("_").pop()); // Extract the last ID number
+              }
+              console.log("lastIdNumber", lastIdNumber);
+              resolve(lastIdNumber);
+            },
+          });
+        });
+      },
+
+      checkingExistsingEntry: function () {
+        let sUrl =
+          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+          "FeatureSettings" +
+          `?$filter=table_id eq '${table_id}'`;
+        return new Promise((resolve, reject) => {
+          $.ajax({
+            type: "GET",
+            url: sUrl,
+            success: function (data) {
+              resolve(data.value);
+            },
+            error: function () {
+              console.error(error);
+            },
+          });
+        });
+      },
+
+      // ----- getting the feature settings-----------------by expanding tableid--->>>
+      gettingFeatureSettings: function () {
+        // let sUrl =
+        //   this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+        //   "FeatureSettings" +
+        //   `?$filter=table_id eq '${table_id}'`;
+        let sUrl =
+          this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
+          `TablesList/${table_id}?$expand=Features`;
+
+
+        return new Promise((resolve, reject) => {
+          $.ajax({
+            type: "GET",
+            url: sUrl,
+            success: function (data) {
+              console.log("settingsdata", data.value);
+
+              // resolve(lastIdNumber);
+            },
+            error: function () {
+              console.error(error);
+            },
+          });
+        });
       },
     });
   }
