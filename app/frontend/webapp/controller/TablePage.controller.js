@@ -350,7 +350,7 @@ sap.ui.define(
         });
       },
 
-      // // ------------For column selection------------Ends----------->>>
+      // // ------------ column selection------------Ends----------->>>
 
       _openDialog: function (sName, sPage, fInit) {
         let oView = this.getView(),
@@ -388,17 +388,21 @@ sap.ui.define(
         let oDialogParent = oDialog.getParent(),
           oTable = oDialogParent.byId("idMyTable"),
           oColumns = oTable.getColumns();
-        // console.log('oColumns',oColumns)
         // Loop every column of the table
         oColumns.forEach((column) => {
-          // let columnId = column.getId().split("--")[2]; // Get column ID (JSON Property)
           let columnId = column.getAggregation("header").getProperty("text"); // Get column ID (JSON Property)
+          let status = columnId == "ProductID" ? true : false
+          let status2 = columnId == "ProductID" ? true : false
+
           // console.log('columnIdzzzz',columnId)
           oDialog.addSortItem(
             new ViewSettingsItem({
               // Convert column ID into ViewSettingsItem objects.
               key: columnId, // Key -> JSON Property
               text: column.getAggregation("header").getProperty("text"),
+              selected:status,
+              // sortDescending:true
+              // setSelectedSortItem()
             })
           );
         });
@@ -794,21 +798,21 @@ sap.ui.define(
 
       // ----- getting the feature settings-----------------by expanding tableid--->>>
       gettingFeatureSettings: function () {
-        // let sUrl =
-        //   this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
-        //   "FeatureSettings" +
-        //   `?$filter=table_id eq '${table_id}'`;
+        let that = this;
         let sUrl =
           this.getOwnerComponent().getModel("mainModel").getServiceUrl() +
           `TablesList/${table_id}?$expand=Features`;
-
 
         return new Promise((resolve, reject) => {
           $.ajax({
             type: "GET",
             url: sUrl,
             success: function (data) {
-              console.log("settingsdata", data.value);
+              console.log("settingsdata", data.Features);
+              that
+                .getView()
+                .getModel("tableDataModel")
+                .setProperty("/FeatureSettingDatas", data.Features);
 
               // resolve(lastIdNumber);
             },
@@ -817,6 +821,69 @@ sap.ui.define(
             },
           });
         });
+      },
+
+      callFSfromModel: function () {
+        console.log(
+          this.getView()
+            .getModel("tableDataModel")
+            .getProperty("/FeatureSettingDatas")
+        );
+        console.log(
+          this.getView()
+            .getModel("tableDataModel")
+            .getProperty("/SelectedColumnDatas")
+        );
+        let FeatureSettingDatas = this.getView()
+          .getModel("tableDataModel")
+          .getProperty("/FeatureSettingDatas");
+        let Datas = this.getView()
+          .getModel("tableDataModel")
+          .getProperty("/SelectedColumnDatas");
+
+        // Function to sort data
+        function sortBy(key, order) {
+          return (a, b) => {
+            if (order === "ASC") {
+              return a[key] > b[key] ? 1 : -1;
+            } else {
+              return a[key] < b[key] ? 1 : -1;
+            }
+          };
+        }
+
+        // Function to group data
+        function groupBy(key) {
+          return (array) => {
+            return array.reduce((result, obj) => {
+              let value = obj[key];
+              result[value] = result[value] || [];
+              result[value].push(obj);
+              return result;
+            }, {});
+          };
+        }
+
+        // Apply sorting or grouping based on FeatureSettings
+        FeatureSettingDatas.forEach((setting) => {
+          let { column_name, feature_name, setting_name } = setting;
+          let data = Datas.map((obj) => obj[column_name]);
+
+          if (feature_name === "sort") {
+            Datas.sort(sortBy(column_name, setting_name));
+          } else if (feature_name === "groupBy") {
+            let groupedData = groupBy(column_name)(Datas);
+            // this.getView()
+            // .getModel("tableDataModel")
+            // .setProperty("/SelectedColumnDatas",groupedData);
+            console.log(groupedData);
+          }
+        });
+        this.getView()
+        .getModel("tableDataModel")
+        .setProperty("/SelectedColumnDatas",Datas);
+        this.creatingTable();
+        // console.log(Datas);
       },
     });
   }
