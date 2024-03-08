@@ -15,7 +15,7 @@
     "devDependencies": {
         "@cap-js/sqlite": "^1",
         "@sap/cds-dk": "^7",
-        "@sap/ux-specification": "^1.120.4",
+        "@sap/ux-specification": "^1.120.5",
         "rimraf": "^3.0.2"
     },
     "scripts": {
@@ -23,7 +23,8 @@
         "watch-frontend": "cds watch --open frontend/webapp/index.html?sap-ui-xx-viewCache=false",
         "undeploy": "cf undeploy DynamicListSaveSearch --delete-services --delete-service-keys --delete-service-brokers",
         "build": "rimraf resources mta_archives && mbt build --mtar archive",
-        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+        "watch-learn": "cds watch --open learn/webapp/index.html?sap-ui-xx-viewCache=false"
     },
     "cds": {
         "requires": {

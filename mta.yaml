@@ -59,9 +59,23 @@ modules:
       - frontend.zip
       name: frontend
       target-path: resources/
+    - artifacts:
+      - learn.zip
+      name: learn
+      target-path: resources/
 - name: frontend
   type: html5
   path: app/frontend
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: learn
+  type: html5
+  path: app/learn
   build-parameters:
     build-result: dist
     builder: custom
