@@ -9,13 +9,18 @@
         id="page"
         title="{i18n>title}"
     > -->
-	<FlexibleColumnLayout id="flexibleColumnLayout" backgroundDesign="Solid">
+	<!-- <FlexibleColumnLayout id="flexibleColumnLayout" backgroundDesign="Solid">
 		<beginColumnPages>
 			<mvc:XMLView id="beginView" viewName="learn.view.Master"/>
 		</beginColumnPages>
         <midColumnPages>
         	<mvc:XMLView id="detailView" viewName="learn.view.Detail"/>
         </midColumnPages>
-	</FlexibleColumnLayout>
+	</FlexibleColumnLayout> -->
         <!-- </m:Page> -->
+        	<FlexibleColumnLayout
+		id="flexibleColumnLayout"
+		stateChange=".onStateChanged"
+		backgroundDesign="Solid"
+		layout="{/layout}"/>
 </mvc:View>
