@@ -2,14 +2,20 @@
     controllerName="learn.controller.trying"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
-    xmlns="sap.m"
+    xmlns="sap.f"
+    xmlns:m="sap.m"
 >
-    <Page
+    <!-- <m:Page
         id="page"
         title="{i18n>title}"
-    >
-        <content>
-            <Button text="Experiment" />
-        </content>
-    </Page>
+    > -->
+	<FlexibleColumnLayout id="flexibleColumnLayout" backgroundDesign="Solid">
+		<beginColumnPages>
+			<mvc:XMLView id="beginView" viewName="learn.view.Master"/>
+		</beginColumnPages>
+        <midColumnPages>
+        	<mvc:XMLView id="detailView" viewName="learn.view.Detail"/>
+        </midColumnPages>
+	</FlexibleColumnLayout>
+        <!-- </m:Page> -->
 </mvc:View>

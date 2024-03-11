@@ -5,9 +5,10 @@
 sap.ui.define([
         "sap/ui/core/UIComponent",
         "sap/ui/Device",
-        "learn/model/models"
+        "learn/model/models",
+        'sap/ui/model/json/JSONModel'
     ],
-    function (UIComponent, Device, models) {
+    function (UIComponent, Device, models,JSONModel) {
         "use strict";
 
         return UIComponent.extend("learn.Component", {
@@ -21,14 +22,22 @@ sap.ui.define([
              * @override
              */
             init: function () {
+                var oProductsModel;
                 // call the base component's init function
                 UIComponent.prototype.init.apply(this, arguments);
+
+                // set products demo model on this sample
+			    oProductsModel = new JSONModel(sap.ui.require.toUrl('learn/model/products.json'));
+                console.log('oProductsModel',oProductsModel);
+
+                oProductsModel.setSizeLimit(1000);
 
                 // enable routing
                 this.getRouter().initialize();
 
                 // set the device model
-                this.setModel(models.createDeviceModel(), "device");
+                // this.setModel(models.createDeviceModel(), "device");
+                this.setModel(oProductsModel, "products");
             }
         });
     }
