@@ -97,17 +97,32 @@
         "async": true,
         "viewPath": "learn.view",
         "controlAggregation": "pages",
-        "controlId": "app",
         "clearControlAggregation": false
       },
       "routes": [
         {
           "name": "Routetrying",
-          "pattern": ":?query:",
+          "pattern": "f",
           "target": [
             "Targettrying"
           ]
-        }
+        },
+        {
+					"name": "master",
+					"pattern": "",
+					"target": [
+						"master",
+						"detail"
+					]
+				},
+				{
+					"name": "detail",
+					"pattern": "detail/{product}/{layout}",
+					"target": [
+						"master",
+						"detail"
+					]
+				}
       ],
       "targets": {
         "Targettrying": {
@@ -116,11 +131,19 @@
           "clearControlAggregation": false,
           "viewId": "trying",
           "viewName": "trying"
-        }
+        },
+        "master": {
+          "viewName": "Master",
+					"controlAggregation": "beginColumnPages"
+				},
+				"detail": {
+          "viewName": "Detail",
+					"controlAggregation": "midColumnPages"
+				}
       }
     },
     "rootView": {
-      "viewName": "learn.view.App",
+      "viewName": "learn.view.trying",
       "type": "XML",
       "async": true,
       "id": "App"

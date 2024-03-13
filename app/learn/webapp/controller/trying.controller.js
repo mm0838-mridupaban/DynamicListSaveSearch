@@ -35,6 +35,10 @@ sap.ui.define([
     
             onExit: function () {
                 this.oRouter.detachRouteMatched(this.onRouteMatched, this);
+            },
+            experimenting:function(){
+                console.log(this.getView().getModel().getProperty("/layout"));
+               console.log(this.getView().byId("flexibleColumnLayout"))
             }
         });
     });

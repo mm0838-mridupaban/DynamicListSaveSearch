@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="learn.controller.Detail"
+    controllerName="learn.controller.Detail"
     xmlns="sap.uxap"
     xmlns:m="sap.m"
     xmlns:f="sap.f"
@@ -21,7 +21,7 @@
                     <m:ToggleButton
                         text="Edit"
                         type="Emphasized"
-                        	press=".onEditToggleButtonPress"
+                        press=".onEditToggleButtonPress"
                     />
                     <m:Button
                         text="Delete"

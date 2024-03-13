@@ -5,11 +5,16 @@
     xmlns="sap.f"
     xmlns:m="sap.m"
 >
-    <!-- <m:Page
-        id="page"
+    <m:Page
+        id="App"
         title="{i18n>title}"
-    > -->
-	<!-- <FlexibleColumnLayout id="flexibleColumnLayout" backgroundDesign="Solid">
+    >
+        <m:Button
+            text="Experiment"
+            press="experimenting"
+        />
+
+        <!-- <FlexibleColumnLayout id="flexibleColumnLayout" backgroundDesign="Solid">
 		<beginColumnPages>
 			<mvc:XMLView id="beginView" viewName="learn.view.Master"/>
 		</beginColumnPages>
@@ -17,10 +22,23 @@
         	<mvc:XMLView id="detailView" viewName="learn.view.Detail"/>
         </midColumnPages>
 	</FlexibleColumnLayout> -->
-        <!-- </m:Page> -->
-        	<FlexibleColumnLayout
+        <FlexibleColumnLayout
+            id="flexibleColumnLayout"
+            stateChange=".onStateChanged"
+            backgroundDesign="Solid"
+            layout="{/layout}"
+        />
+    </m:Page>
+</mvc:View>
+<!-- <mvc:View
+	controllerName="learn.controller.trying"
+	displayBlock="true"
+	height="100%"
+	xmlns="sap.f"
+	xmlns:mvc="sap.ui.core.mvc">
+	<FlexibleColumnLayout
 		id="flexibleColumnLayout"
 		stateChange=".onStateChanged"
 		backgroundDesign="Solid"
 		layout="{/layout}"/>
-</mvc:View>
+</mvc:View> -->
