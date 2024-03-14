@@ -54,17 +54,9 @@ entity FeatureSettings {
 }
 
 
-
-
-
-
-
-
-// entity FeatureSettings {
-//     key setting_id : String;
-//     feature_id : String;
-//     setting_name : String;
-//     setting_value : String;
-//     // Association to TableFeatures entity
-//     Feature : Association to TableFeatures on feature_id = $self.feature_id;
-// }
+entity Users {
+    key id : UUID;
+    name : String;
+    email : String;
+    password : String;
+}

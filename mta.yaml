@@ -63,6 +63,10 @@ modules:
       - learn.zip
       name: learn
       target-path: resources/
+    - artifacts:
+      - crud1.zip
+      name: crud1
+      target-path: resources/
 - name: frontend
   type: html5
   path: app/frontend
@@ -76,6 +80,16 @@ modules:
 - name: learn
   type: html5
   path: app/learn
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: crud1
+  type: html5
+  path: app/crud1
   build-parameters:
     build-result: dist
     builder: custom

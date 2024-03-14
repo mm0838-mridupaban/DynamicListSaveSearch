@@ -1,0 +1,37 @@
+<mvc:View
+    controllerName="crud1.controller.crud"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Page
+        id="page"
+        title="{i18n>title}"
+    >
+        <content>
+            <f:SimpleForm
+                id="simpleFormChange"
+                editable="true"
+                class="editableForm"
+            >
+                <f:content>
+                    <Label text="Name" />
+                    <Input value="{DataModel>/NewUsers/Name}" />
+                    <Label text="Email" />
+                    <Input value="{DataModel>/NewUsers/Email}" />
+                    <Label text="Password" />
+                    <Input value="{DataModel>/NewUsers/Password}" />
+                </f:content>
+            </f:SimpleForm>
+            <Button
+                text="Signup"
+                press="onClickSignup"
+            />
+            <Button
+                text="Cancel"
+                press=".onCancelDialog"
+            />
+        </content>
+    </Page>
+</mvc:View>

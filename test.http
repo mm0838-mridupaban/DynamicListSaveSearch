@@ -53,3 +53,23 @@ X-Requested-With: XMLHttpRequest
 "is_visible":false
 }
 ###
+
+# Posting data to Users 
+POST  http://localhost:4004/odata/v4/catalog/Users
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{"name":"Vidhyapathi N",
+"email":"mridu@gmail.com",
+"password":"Mridu"
+}
+
+###
+POST  http://localhost:4004/odata/v4/catalog/TestAc
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{
+    "Name":"Vidhyapathi",
+    "Class":"ECE"
+}
