@@ -1,8 +1,11 @@
 {
     "NewUsers":{
-        "Name":"",
-        "Email":"",
-        "Password":""
-
+        "name":"",
+        "email":"",
+        "password":""
+    },
+    "Login":{
+        "email":"",
+        "password":""
     }
 }

@@ -55,7 +55,7 @@ X-Requested-With: XMLHttpRequest
 ###
 
 # Posting data to Users 
-POST  http://localhost:4004/odata/v4/catalog/Users
+POST  http://localhost:4004/odata/v4/catalog/Signup
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 

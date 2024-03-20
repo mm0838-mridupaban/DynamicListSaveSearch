@@ -1,5 +1,5 @@
 <mvc:View
-    controllerName="crud1.controller.crud"
+    controllerName="crud1.controller.Login"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
     xmlns="sap.m"
@@ -16,21 +16,21 @@
                 class="editableForm"
             >
                 <f:content>
-                    <Label text="Name" />
-                    <Input value="{DataModel>/NewUsers/name}" />
+                    <!-- <Label text="Name" />
+                    <Input value="{DataModel>/NewUsers/name}" /> -->
                     <Label text="Email" />
-                    <Input value="{DataModel>/NewUsers/email}" />
+                    <Input value="{DataModel>/Login/email}" />
                     <Label text="Password" />
-                    <Input value="{DataModel>/NewUsers/password}" />
+                    <Input value="{DataModel>/Login/password}" />
                 </f:content>
             </f:SimpleForm>
             <Button
-                text="Signup"
-                press="onClickSignup"
+                text="Login"
+                press=".onClickLogin"
             />
             <Button
-                text="Cancel"
-                press=".onCancelDialog"
+                text="Signup"
+                press="onClickSignup"
             />
         </content>
     </Page>

@@ -20,7 +20,6 @@
         "uri": "/odata/v4/catalog/",
         "type": "OData",
         "settings": {
-          "annotations": [],
           "odataVersion": "4.0"
         }
       }
@@ -68,7 +67,7 @@
           "bundleName": "crud1.i18n.i18n"
         }
       },
-      "": {
+      "mainModel": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
@@ -107,6 +106,13 @@
           "target": [
             "Targetcrud"
           ]
+        },
+        {
+          "name": "RouteLoginPage",
+          "pattern": "LoginPage",
+          "target": [
+            "TargetLoginPage"
+          ]
         }
       ],
       "targets": {
@@ -116,6 +122,13 @@
           "clearControlAggregation": false,
           "viewId": "crud",
           "viewName": "crud"
+        },
+        "TargetLoginPage": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "Login",
+          "viewName": "Login"
         }
       }
     },
